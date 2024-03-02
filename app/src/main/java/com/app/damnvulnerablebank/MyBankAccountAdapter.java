@@ -35,9 +35,11 @@ public class MyBankAccountAdapter extends RecyclerView.Adapter<MyBankAccountAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //final BankAccount account = MyBankAccounts.get(position);
-        holder.textviewmoney.setText("account.getBalance()");
-        holder.textviewbankno.setText("account.getAccount_number()");
+        if (position < MyBankAccounts.size()) {
+            final BankAccount account = MyBankAccounts.get(position);
+            holder.textviewmoney.setText(String.valueOf(account.getBalance()));
+            holder.textviewbankno.setText(String.valueOf(account.getAccount_number()));
+        }
     }
 
     @Override

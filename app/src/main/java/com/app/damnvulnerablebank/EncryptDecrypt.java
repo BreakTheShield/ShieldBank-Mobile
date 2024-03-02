@@ -4,6 +4,8 @@ package com.app.damnvulnerablebank;
 import android.util.Base64;
 import android.util.Log;
 
+import java.nio.charset.StandardCharsets;
+
 public class EncryptDecrypt {
     static public String secret = "amazing";
     static public int secretLength = secret.length();
@@ -29,10 +31,17 @@ public class EncryptDecrypt {
 
     public static String decrypt(String input) {
         // 디코딩 byte
-        byte[] decodeByte = Base64.decode(input,0);
-        String decodeString = new String(decodeByte);
-        String decryptString = operate(decodeString);
+        try {
+            // 디코딩된 바이트
+            byte[] decodeByte = Base64.decode(input, Base64.DEFAULT);
+            String decodeString = new String(decodeByte, StandardCharsets.UTF_8);
+            String decryptString = operate(decodeString);
 
-        return decryptString;
+            return decryptString;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e("ENCRYPT_DECRYPT", "Base64 decoding error: " + e.getMessage());
+            return "";  // 적절하게 오류를 처리하세요. 이 부분은 임시적인 예시입니다.
+        }
     }
 }
