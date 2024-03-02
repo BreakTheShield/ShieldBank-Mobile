@@ -4,13 +4,19 @@ package com.app.damnvulnerablebank;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,7 +29,8 @@ public class BankMainActivity extends AppCompatActivity {
     private TransactionFragment transactionFragment = new TransactionFragment();
     private HomeFragment homeFragment = new HomeFragment();
     private LoanFragment loanFragment = new LoanFragment();
-    private MypageFragment mypageFragment = new MypageFragment();
+    private MydataFragment mydataFragment = new MydataFragment();
+
 
 
     @Override
@@ -40,10 +47,14 @@ public class BankMainActivity extends AppCompatActivity {
                 }).create().show();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.tabs_layout, homeFragment).commitAllowingStateLoss();
@@ -59,7 +70,33 @@ public class BankMainActivity extends AppCompatActivity {
         }
     }
 
+    // 메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater ().inflate (R.menu.toolbar_menu, menu);
 
+        return true;
+    }
+
+    //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
+    //액티비티의 onOptionsItemSelected() 메서드가 호출
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId ()) {
+            case R.id.toolbar_mypage:
+                return true;
+            case R.id.toolbar_logout:
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("jwt", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean("isloggedin", false);
+                editor.apply();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            default:
+                return super.onOptionsItemSelected (item);
+        }
+    }
 
     class ItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener {
         @Override
@@ -79,8 +116,8 @@ public class BankMainActivity extends AppCompatActivity {
                 case R.id.tab_loan:
                     transaction.replace(R.id.tabs_layout, loanFragment).commitAllowingStateLoss();
                     break;
-                case R.id.tab_mypage:
-                    transaction.replace(R.id.tabs_layout, mypageFragment).commitAllowingStateLoss();
+                case R.id.tab_mydata:
+                    transaction.replace(R.id.tabs_layout, mydataFragment).commitAllowingStateLoss();
                     break;
             }
 

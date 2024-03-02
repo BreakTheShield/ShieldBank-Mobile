@@ -198,7 +198,6 @@ public class AccountListFragment extends Fragment {
         date = getView().findViewById(R.id.text_view_date_main);
         recyclerViewbankaccount = getView().findViewById(R.id.recyclerview_bank_account);
         add_bank_account = getView().findViewById(R.id.image_view_add_bank_account);
-        add_credit_card = getView().findViewById(R.id.image_view_add_credit_card);
         linear_layout_request_money = getView().findViewById(R.id.linear_layout_request_money);
         text_view_total_money = getView().findViewById(R.id.text_view_total_money);
         linear_layout_send_money = getView().findViewById(R.id.linear_layout_send_money);
