@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,7 +22,7 @@ public class BankMainActivity extends AppCompatActivity {
     private TransactionFragment transactionFragment = new TransactionFragment();
     private HomeFragment homeFragment = new HomeFragment();
     private LoanFragment loanFragment = new LoanFragment();
-    private MypageFragment mypageFragment = new MypageFragment();
+    private MydataFragment mydataFragment = new MydataFragment();
 
 
     @Override
@@ -80,7 +79,7 @@ public class BankMainActivity extends AppCompatActivity {
                     transaction.replace(R.id.tabs_layout, loanFragment).commitAllowingStateLoss();
                     break;
                 case R.id.tab_mypage:
-                    transaction.replace(R.id.tabs_layout, mypageFragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.tabs_layout, mydataFragment).commitAllowingStateLoss();
                     break;
             }
 

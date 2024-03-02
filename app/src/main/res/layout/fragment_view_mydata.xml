@@ -1,0 +1,96 @@
+<!-- activity_main.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 첫 번째 칸 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:background="@drawable/frame"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- 첫 번째 칸에 들어갈 내용 -->
+        <TextView
+            android:id="@+id/text_view_portfolio"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:autoSizeTextType="uniform"
+            android:text="000님,\n흩어져있는 내 자산 연결하고 \n한번에 관리하세요"
+            android:textColor="@color/black"
+            android:textStyle="bold"></TextView>
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.8"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:autoSizeTextType="uniform"
+            android:text="Mydata 기능은 한번에 여러 계좌의 자산들을 손쉽게 정리할 수 있는 서비스 입니다."
+            android:textColor="@color/gray" />
+
+    </LinearLayout>
+
+    <!-- 두 번째 칸 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/frame"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- 두 번째 칸에 들어갈 내용 -->
+        <TextView
+
+            android:id="@+id/text_view_credit_cards"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="3"
+            android:text="추천 금융기관"
+            android:textColor="@color/black"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="40sp"
+            android:textStyle="bold"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_credit_card"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            tools:layout_editor_absoluteX="167dp"
+            tools:layout_editor_absoluteY="213dp" />
+
+    </LinearLayout>
+
+    <!-- 세 번째 칸 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:background="@drawable/frame"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- 세 번째 칸에 들어갈 내용 -->
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
+            android:text="마이데이터 등록하기"
+            android:autoSizeTextType="uniform" />
+
+    </LinearLayout>
+
+</LinearLayout>
