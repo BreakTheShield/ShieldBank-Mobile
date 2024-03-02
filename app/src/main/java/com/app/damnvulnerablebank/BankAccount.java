@@ -1,12 +1,13 @@
 package com.app.damnvulnerablebank;
 
-public class AccountListView {
+
+public class BankAccount {
     private String account_number;
     private String bank_code;
     private String username;
-    private String balance;
+    private int balance;
 
-    public AccountListView() {}
+    public BankAccount() {}
 
     public String getAccount_number() {
         return account_number;
@@ -16,12 +17,12 @@ public class AccountListView {
         this.account_number = "계좌번호:\n"+account_number+"\n";
     }
 
-    public String getBalance() {
+    public int getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
-        this.balance = "잔액:\n"+balance+"\n";
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public String getBank_code() {

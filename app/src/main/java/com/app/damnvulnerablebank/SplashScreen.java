@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private static int SPLASH_TIMER = 3000;
+    private static int SPLASH_TIMER = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

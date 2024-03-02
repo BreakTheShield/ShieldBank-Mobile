@@ -20,6 +20,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".BankMainActivity" />
+
         <activity android:name=".Myprofile" />
         <activity android:name=".CurrencyRates">
             <intent-filter>
@@ -56,14 +68,7 @@
         <activity android:name=".Dashboard" />
         <activity android:name=".RegisterBank" />
         <activity android:name=".BankLogin" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SplashScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <meta-data
             android:name="preloaded_fonts"

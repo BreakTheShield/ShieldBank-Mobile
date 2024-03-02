@@ -3,9 +3,11 @@ package com.app.damnvulnerablebank;
 안드로이드 앱에서 로그인 인증을 처리하는 과정
 사용자가 로그인 정보를 입력하고 서버로 전송하여 인증을 수행하며, 그에 따른 응답을 처리
 */
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,6 +44,20 @@ public class BankLogin extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        BankLogin.super.onBackPressed();
+                        System.exit(0);
+                    }
+                }).create().show();
+    }
 
     public void bankLogin(View view)
     {
@@ -107,7 +123,7 @@ public class BankLogin extends AppCompatActivity {
                             sharedPreferences.edit().putString("accesstoken",accessToken).apply();
 //                            sharedPreferences.edit().putBoolean("isloggedin",true).apply();
                             // 대시보드 화면(Dashboard)으로 이동
-                            startActivity(new Intent(BankLogin.this, Dashboard.class));
+                            startActivity(new Intent(BankLogin.this, BankMainActivity.class));
                             finish();
 
                         } catch (JSONException e) {

@@ -17,7 +17,7 @@ public class ViewAccountList extends AppCompatActivity implements Badapter.OnIte
     public static final String username="username";
 
     RecyclerView recyclerView;
-    List<AccountListView> accounts;
+    List<BankAccount> accounts;
     Badapter badapter;
 
 

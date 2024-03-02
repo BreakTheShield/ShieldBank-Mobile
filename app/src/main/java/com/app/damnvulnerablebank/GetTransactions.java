@@ -34,8 +34,6 @@ public class GetTransactions extends AppCompatActivity {
         RecyclerView recyclerView;
         List<TransactionRecords> trecords;
         private TextView emptyView;
-
-
     Adapter adapter;
 
 
