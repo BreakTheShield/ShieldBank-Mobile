@@ -28,9 +28,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,23 +41,147 @@ import java.util.concurrent.Executor;
 
 import static com.app.damnvulnerablebank.PendingBeneficiary.beneficiary_account_number;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+
 public class Mydata_auth extends AppCompatActivity {
 
     Button send;
     TextView tt;
 
+    private JSONArray dataArray;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        OkHttpClient client2 = new OkHttpClient();
+        EncryptDecrypt endecryptor2 = new EncryptDecrypt();
+        SharedPreferences sharedPreferences = Mydata_auth.this.getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
+
+        String apiUrl2 = "http://59.16.223.162:38888/api/Account/view";
+
+        RequestBody requestBody2 = new FormBody.Builder()
+                .add("username", "username")
+
+                // 다른 필요한 데이터도 추가해주세요
+                .build();
+        okhttp3.Request request2 = new okhttp3.Request.Builder()
+                .url(apiUrl2)
+                .post(requestBody2)
+                .addHeader("Authorization", "1 " + retrivedToken2)
+                .build();
+        String encryptedData2 = endecryptor2.encrypt(request2.toString());
+        client2.newCall(request2).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 요청 실패 처리
+                e.printStackTrace();
+                Log.e("API_RESPONSE", "JSON parsing error: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                // 요청 성공 시 처리
+                if (response.isSuccessful()) {
+                    String responseData2 = response.body().string();
+                    Log.d("API_RESPONSE", "JSON Response: " + responseData2);
+
+
+                    // 응답 데이터 파싱
+                    try {
+                        JSONObject jsonResponse3 = new JSONObject(responseData2);
+                        String encData2 = jsonResponse3.getString("enc_data");
+                        String data2 = endecryptor2.decrypt(encData2);
+                        Log.d("API_RESPONSE", "JSON Response: " + data2);
+
+                        JSONObject dataObject2 = new JSONObject(data2);
+                        dataArray = dataObject2.getJSONArray("data");
+                        JSONObject firstObject = dataArray.getJSONObject(0);
+                        String username = firstObject.getString("username");
+                        Log.d("API_RESPONSE", "user 뽑아오기: " + username);
+                        useusername(username);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("API_RESPONSE", "Error: " + e.getMessage());
+                    }
+                } else {
+                    // 서버에서 오류 응답이 온 경우 처리
+                    // response.code() 및 response.message()를 통해 상세한 정보를 얻을 수 있음
+                }
+            }
+        });
         setContentView(R.layout.activity_mydata_auth);
-        /*tt=findViewById(R.id.actid);
-        Intent i =getIntent();
-        String p=i.getStringExtra(beneficiary_account_number);
-        tt.setText(p);*/
-        send=findViewById(R.id.buttonOk);
+        send = findViewById(R.id.buttonOk);
+
+        send.setOnClickListener(v -> mydata_auth());
     }
 
+    private void useusername(String username){
+        OkHttpClient client2 = new OkHttpClient();
+        EncryptDecrypt endecryptor2 = new EncryptDecrypt();
+        SharedPreferences sharedPreferences = Mydata_auth.this.getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
+        Log.d("API_RESPONSE", "log start: ");
+
+        String apiUrl2 = "http://59.16.223.162:38888/api/Mydata/mydata_sms";
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(apiUrl2).newBuilder();
+        urlBuilder.addQueryParameter("username", username);
+        String finalUrl = urlBuilder.build().toString();
+
+        okhttp3.Request request2 = new okhttp3.Request.Builder()
+                .url(finalUrl)
+                .get()
+                .addHeader("Authorization", "1 " + retrivedToken2)
+                .build();
+        String encryptedData2 = endecryptor2.encrypt(request2.toString());
+
+        Log.d("API_RESPONSE", "log start22222222: " + encryptedData2);
+        Log.d("API_RESPONSE", "log 3333333333333333: " + request2);
+        client2.newCall(request2).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 요청 실패 처리
+                e.printStackTrace();
+                Log.e("API_RESPONSE", "JSON parsing error: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                // 요청 성공 시 처리
+                if (response.isSuccessful()) {
+                    String responseData2 = response.body().string();
+                    Log.d("API_RESPONSE", "JSON Response: " + responseData2);
+
+
+                    // 응답 데이터 파싱
+                    try {
+                        JSONObject jsonResponse3 = new JSONObject(responseData2);
+                        String encData2 = jsonResponse3.getString("enc_data");
+                        String data2 = endecryptor2.decrypt(encData2);
+                        Log.d("API_RESPONSE", "JSON Response: " + data2);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("API_RESPONSE", "Error: " + e.getMessage());
+                    }
+                } else {
+                    // 서버에서 오류 응답이 온 경우 처리
+                    // response.code() 및 response.message()를 통해 상세한 정보를 얻을 수 있음
+                }
+            }
+        });
+
+    }
 
     public void mydata_auth(){
         SharedPreferences sharedPreferences = getSharedPreferences("jwt", Context.MODE_PRIVATE);
@@ -67,7 +193,7 @@ public class Mydata_auth extends AppCompatActivity {
         EditText ed = findViewById(R.id.editTextNumber);     // 수취계좌
         //EditText ed1 = findViewById(R.id.edamt);    // 이체금액
         //int to_account = 0;
-        int auth_num = 0;
+        int authnum = 0;
         //String sendtime = dateFormat.format(currentDate);
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -77,25 +203,20 @@ public class Mydata_auth extends AppCompatActivity {
 
             // fetch values
             if (ed.getText().toString() != "") {
-                auth_num = Integer.parseInt(ed.getText().toString());
+                authnum = Integer.parseInt(ed.getText().toString());
                 //amount = Integer.parseInt(ed1.getText().toString());
             } else {
                 Toast.makeText(getApplicationContext(), "Invalid Input ", Toast.LENGTH_SHORT).show();
                 onRestart();
             }
             //input your API parameters
-            requestData.put("auth_num", auth_num);          // 수취계좌 varchar
-            //requestData.put("amount", amount);                  // 이체금액 int
-            //requestData.put("sendtime", sendtime);              // 전송시간 datetime
+            requestData.put("authnum", authnum);          // 수취계좌 varchar
 
-
-            // Encrypt data before sending
-            requestDataEncrypted.put("enc_data", EncryptDecrypt.encrypt(requestData.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
         // Enter the correct url for your api service site
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, finalUrl, requestDataEncrypted,
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, finalUrl, requestData,
                 response -> {
                     try {
                         JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
