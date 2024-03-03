@@ -24,7 +24,7 @@
         android:title="@string/loan" />
 
     <item
-        android:id="@+id/tab_mypage"
-        android:icon="@drawable/mypage"
+        android:id="@+id/tab_mydata"
+        android:icon="@drawable/icon_mydata"
         android:title="@string/mydata" />
 </menu>

@@ -13,7 +13,7 @@ public class BankAccount {
         return account_number;
     }
 
-    public void setAccount_number(String account_number) {
+    public void setAccount_number(int account_number) {
         this.account_number = "계좌번호:\n"+account_number+"\n";
     }
 
