@@ -61,6 +61,7 @@ public class LoanFragment extends Fragment {
         void onLoanResult(String isLoan);
     }
 
+
     public String get_loan="";
 
     public void getLoan(final LoanCallback callback) {

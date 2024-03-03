@@ -54,16 +54,10 @@ import okhttp3.*;
 public class AccountListFragment extends Fragment {
     private JSONArray dataArray;
 
-    LinearLayout linear_layout_request_money,linear_layout_send_money, linear_layout_history;
-    ImageView add_bank_account, add_credit_card;
-    RecyclerView recyclerView;
-    RecyclerView recyclerViewbankaccount, recyclerViewHistory;
-    TextView text_view_name, date,text_view_total_money;
-    ArrayList<BankAccount> myBankAccount;
-    BankAccount sendUser = null;
-    String bankAccountAnother = null;
-    String anotherUserid;
-
+    LinearLayout linear_layout_request_money,linear_layout_send_money;
+    ImageView add_bank_account;
+    RecyclerView recyclerViewbankaccount;
+    TextView text_view_name, date,text_view_total_money, text_view_code;
 
     @Nullable
     @Override
@@ -102,7 +96,11 @@ public class AccountListFragment extends Fragment {
                     BankAccount bankAccount = new BankAccount();
                     bankAccount.setBalance(jsonObject.getInt("balance"));
                     bankAccount.setAccount_number(jsonObject.getInt("account_number"));
-
+                    if(jsonObject.getInt("bank_code")==555) {
+                        bankAccount.setBank_code("실드뱅크");
+                    }
+                    else if(jsonObject.getInt("bank_code")==333)
+                        bankAccount.setBank_code("소드뱅크");
                     bankAccounts.add(bankAccount);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -194,17 +192,9 @@ public class AccountListFragment extends Fragment {
         linear_layout_request_money = getView().findViewById(R.id.linear_layout_request_money);
         text_view_total_money = getView().findViewById(R.id.text_view_total_money);
         linear_layout_send_money = getView().findViewById(R.id.linear_layout_send_money);
-        //linear_layout_history = getView().findViewById(R.id.linear_layout_history);
+        text_view_code = getView().findViewById(R.id.text_view_bank_code);
     }
 
-    public void setTotalMoney(ArrayList<BankAccount> MyBankAccounts){
-        int totalmoney = 0;
-
-        for (int i = 0; i<MyBankAccounts.size();i++){
-            totalmoney += MyBankAccounts.get(i).getBalance();
-        }
-        text_view_total_money.setText(Integer.toString(totalmoney));
-    }
 
     public void click() {
         // "ADD" 버튼 클릭 이벤트 처리 코드
