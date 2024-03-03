@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <!-- 설명 텍스트 -->
+    <TextView
+        android:id="@+id/textViewDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="인증번호를 입력해주세요"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- 숫자 입력창 -->
+    <EditText
+        android:id="@+id/editTextNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="인증번호를 입력하세요"
+        android:layout_below="@id/textViewDescription"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- 버튼 레이아웃 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <!-- 취소 버튼 -->
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="취소"/>
+
+        <!-- 확인 버튼 -->
+        <Button
+            android:id="@+id/buttonOk"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="확인"/>
+    </LinearLayout>
+
+</RelativeLayout>
