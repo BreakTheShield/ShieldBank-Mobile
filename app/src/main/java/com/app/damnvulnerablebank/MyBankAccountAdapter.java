@@ -44,7 +44,7 @@ public class MyBankAccountAdapter extends RecyclerView.Adapter<MyBankAccountAdap
 
     @Override
     public int getItemCount() {
-        return 10;
+        return MyBankAccounts.size();
     }
 
 
