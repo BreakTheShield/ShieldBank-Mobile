@@ -80,7 +80,6 @@ public class LoanFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
-
                             // Check for error message
                             if (decryptedResponse.getJSONObject("status").getInt("code") == 200) {
                                 JSONObject dataObject = decryptedResponse.getJSONObject("data");
@@ -97,7 +96,6 @@ public class LoanFragment extends Fragment {
                                 loanData.put("balance", balanceArray);
                                 loanData.put("status_code", statusCode);
 
-                                Log.d("loanData", String.valueOf(loanData));
                                 callback.onLoanResult(String.valueOf(loanData));
 
                             } else if (decryptedResponse.getJSONObject("status").getInt("code") == 400) {
@@ -160,21 +158,23 @@ public class LoanFragment extends Fragment {
                 Log.d("loanData", loanData);
 
                 JSONObject jsonObject = new JSONObject(loanData);
-                int statusCode = jsonObject.getInt("status_code");
-                JSONArray accountNumberArray = jsonObject.getJSONArray("account_number");
-                JSONArray loanAmountArray = jsonObject.getJSONArray("loan_amount");
-                JSONArray balanceArray = jsonObject.getJSONArray("balance");
-                // Remove all views from rootView
+                String statusCode = jsonObject.getString("status_code");
+//                JSONArray balanceArray = jsonObject.getJSONArray("balance");
+                Log.d("statusCode123", statusCode);
+
                 rootView.removeAllViews();
 
-
                 View loanYView = null;
-                if (statusCode == 200) {
+                View loanNView = null;
+
+                if (statusCode.equals("200")) {
                     // Show fragment_loan_y layout
                     loanYView = inflater.inflate(R.layout.fragment_loan_y, container, false);
+                    JSONArray accountNumberArray = jsonObject.getJSONArray("account_number");
+                    JSONArray loanAmountArray = jsonObject.getJSONArray("loan_amount");
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                    Spinner accountSpinner = loanYView.findViewById(R.id.account_list_spinner);
+                    Spinner accountSpinner = loanYView.findViewById(R.id.account_list_spinner_y);
                     ArrayAdapter<String> accountAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>());
                     accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     for (int i = 0; i < accountNumberArray.length(); i++) {
@@ -190,12 +190,13 @@ public class LoanFragment extends Fragment {
 
                     rootView.addView(loanYView, params);
 
-                } else {
+                } else if (statusCode.equals("400")){
                     // Show fragment_loan_n layout
-                    View loanNView = inflater.inflate(R.layout.fragment_loan_n, container, false);
+                    loanNView = inflater.inflate(R.layout.fragment_loan_n, container, false);
+                    JSONArray accountNumberArray = jsonObject.getJSONArray("account_number");
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                    Spinner accountSpinner = loanYView.findViewById(R.id.account_list_spinner);
+                    Spinner accountSpinner = loanNView.findViewById(R.id.account_list_spinner_n);
                     ArrayAdapter<String> accountAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>());
                     accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     for (int i = 0; i < accountNumberArray.length(); i++) {
