@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -127,6 +128,51 @@ public class LoanFragment extends Fragment {
                     // Show fragment_loan_y layout
                     View loanYView = inflater.inflate(R.layout.fragment_loan_y, container, false);
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+                    final String retrivedToken = sharedPreferences.getString("accesstoken", null);
+                    final RequestQueue queue = Volley.newRequestQueue(getActivity());
+                    sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
+                    final String url = sharedPreferences.getString("apiurl", null);
+                    String endpoint = "/api/loan/loan";
+                    String finalurl = url + endpoint;
+                    final JsonObjectRequest stringRequest2 = new JsonObjectRequest(Request.Method.POST, finalurl,null,
+                            new Response.Listener<JSONObject>()  {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+
+                                        JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
+
+                                        // Check for error message
+                                        if(decryptedResponse.getJSONObject("status").getInt("code") != 200) {
+                                            Toast.makeText(getActivity(), "Error: " + decryptedResponse.getJSONObject("data").getString("message"), Toast.LENGTH_SHORT).show();
+                                            return;
+                                            // This is buggy. Need to call Login activity again if incorrect credentials are given
+                                        }
+
+                                        JSONObject obj = decryptedResponse.getJSONObject("data");
+
+
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    }){
+                        @Override
+                        public Map getHeaders() throws AuthFailureError {
+                            HashMap headers=new HashMap();
+                            headers.put("Authorization","Bearer "+retrivedToken);
+                            return headers;
+                        }
+                    };
+
                     rootView.addView(loanYView, params);
                 } else {
                     // Show fragment_loan_n layout

@@ -28,6 +28,7 @@
                 android:textSize="11sp" />
 
             <TextView
+                android:id="@+id/tv_loan_y"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="@color/purple"

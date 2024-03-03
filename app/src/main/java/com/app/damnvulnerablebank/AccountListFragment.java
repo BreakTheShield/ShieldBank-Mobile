@@ -128,7 +128,6 @@ public class AccountListFragment extends Fragment {
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         Date currentTime = Calendar.getInstance().getTime();
         date.setText(format.format(currentTime));
-
     }
     public Date getDate(){
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");

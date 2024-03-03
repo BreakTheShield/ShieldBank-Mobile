@@ -11,6 +11,10 @@
     <color name='bg_pink'>#FFD6D6</color>
     <color name='btn_main'>#FF9494</color>
 
+    <color name='silver'>#A5A5A5</color>
+    <color name='gold'>#D6CE25</color>
+    <color name='platinum'>#54ECAA</color>
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
