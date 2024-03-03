@@ -64,6 +64,8 @@ public class HomeFragment extends Fragment {
         recyclerView_qna.setLayoutManager(new LinearLayoutManager(getActivity()));
         viewQnAList();
 
+        onDestroy();
+
         return homeView;
     }
 
@@ -209,6 +211,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void viewNoticeList() {
+        nRecords.clear();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
         final String url = sharedPreferences.getString("apiurl", null);
         String endpoint = "/api/notice/viewboard";

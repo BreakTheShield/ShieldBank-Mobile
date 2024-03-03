@@ -1,26 +1,24 @@
 package com.app.damnvulnerablebank;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+// 송금 Activity
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -35,33 +33,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+
+import static com.app.damnvulnerablebank.PendingBeneficiary.beneficiary_account_number;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.HttpUrl;
 
-public class MydataFragment extends Fragment {
+public class Mydata_auth extends AppCompatActivity {
 
-    private String phoneNumber;
-    public String userName;
+    Button send;
+    TextView tt;
+
     private JSONArray dataArray;
-    private String user_name;
 
-    @SuppressLint("WrongViewCast")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_mydata, container, false);
-        //mydata_sms_auth = getView().findViewById(R.id.mydata_sms_auth);
-        Button mydata_sms_auth = rootView.findViewById(R.id.mydata_sms_auth);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         OkHttpClient client2 = new OkHttpClient();
         EncryptDecrypt endecryptor2 = new EncryptDecrypt();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = Mydata_auth.this.getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
         String apiUrl2 = "http://59.16.223.162:38888/api/Account/view";
@@ -105,6 +104,7 @@ public class MydataFragment extends Fragment {
                         JSONObject firstObject = dataArray.getJSONObject(0);
                         String username = firstObject.getString("username");
                         Log.d("API_RESPONSE", "user 뽑아오기: " + username);
+                        useusername(username);
 
 
                     } catch (JSONException e) {
@@ -117,56 +117,35 @@ public class MydataFragment extends Fragment {
                 }
             }
         });
+        setContentView(R.layout.activity_mydata_auth);
+        send = findViewById(R.id.buttonOk);
 
-        mydata_sms_auth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // "linear_layout_send_money" 버튼 클릭 시 실행할 코드
-
-                // Intent를 통해 새로운 Activity 시작
-                //Intent intent = new Intent(this, Mydata_auth.class);
-                Intent intent = new Intent(getActivity(), Mydata_auth.class);
-                //startActivity(intent);
-                startActivityForResult(intent, 1);
-            }
-        });
-        return rootView;
+        send.setOnClickListener(v -> mydata_auth());
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1) { // 1은 startActivityForResult()에서 사용한 요청 코드입니다.
-            if (resultCode == Activity.RESULT_OK) {
-                // 활동이 성공적으로 반환된 경우
-                reqAccounts();
-            }
-        }
-    }
-
-    private void reqAccounts()
-    {
+    private void useusername(String username){
         OkHttpClient client2 = new OkHttpClient();
         EncryptDecrypt endecryptor2 = new EncryptDecrypt();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = Mydata_auth.this.getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
-        String apiUrl2 = "http://59.16.223.162:38888/api/Mydata/req_account";
+        Log.d("API_RESPONSE", "log start: ");
 
-        RequestBody requestBody2 = new FormBody.Builder()
+        String apiUrl2 = "http://59.16.223.162:38888/api/Mydata/mydata_sms";
 
-                // 다른 필요한 데이터도 추가해주세요
-                .build();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(apiUrl2).newBuilder();
+        urlBuilder.addQueryParameter("username", username);
+        String finalUrl = urlBuilder.build().toString();
 
         okhttp3.Request request2 = new okhttp3.Request.Builder()
-                .url(apiUrl2)
-                .post(requestBody2)
+                .url(finalUrl)
+                .get()
                 .addHeader("Authorization", "1 " + retrivedToken2)
                 .build();
         String encryptedData2 = endecryptor2.encrypt(request2.toString());
 
-        Log.d("API_RESPONSE", "JSON Response: " + request2);
-        Log.d("API_RESPONSE", "JSON 22222222222222: " + requestBody2);
+        Log.d("API_RESPONSE", "log start22222222: " + encryptedData2);
+        Log.d("API_RESPONSE", "log 3333333333333333: " + request2);
         client2.newCall(request2).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -190,12 +169,6 @@ public class MydataFragment extends Fragment {
                         String data2 = endecryptor2.decrypt(encData2);
                         Log.d("API_RESPONSE", "JSON Response: " + data2);
 
-//                        JSONObject dataObject2 = new JSONObject(data2);
-//                        dataArray = dataObject2.getJSONArray("data");
-//                        JSONObject firstObject = dataArray.getJSONObject(0);
-//                        String username = firstObject.getString("username");
-//                        Log.d("API_RESPONSE", "user 뽑아오기: " + username);
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -207,6 +180,69 @@ public class MydataFragment extends Fragment {
                 }
             }
         });
+
     }
 
+    public void mydata_auth(){
+        SharedPreferences sharedPreferences = getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken  = sharedPreferences.getString("accesstoken",null);
+        SharedPreferences sharedPreferences1 = getSharedPreferences("apiurl", Context.MODE_PRIVATE);
+        final String url  = sharedPreferences1.getString("apiurl",null);
+        String endpoint = "/api/Mydata/mydata_sms";
+        final String finalUrl = url+endpoint;
+        EditText ed = findViewById(R.id.editTextNumber);     // 수취계좌
+        //EditText ed1 = findViewById(R.id.edamt);    // 이체금액
+        //int to_account = 0;
+        int authnum = 0;
+        //String sendtime = dateFormat.format(currentDate);
+
+        final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        JSONObject requestData = new JSONObject();
+        JSONObject requestDataEncrypted = new JSONObject();
+        try {
+
+            // fetch values
+            if (ed.getText().toString() != "") {
+                authnum = Integer.parseInt(ed.getText().toString());
+                //amount = Integer.parseInt(ed1.getText().toString());
+            } else {
+                Toast.makeText(getApplicationContext(), "Invalid Input ", Toast.LENGTH_SHORT).show();
+                onRestart();
+            }
+            //input your API parameters
+            requestData.put("authnum", authnum);          // 수취계좌 varchar
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Enter the correct url for your api service site
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, finalUrl, requestData,
+                response -> {
+                    try {
+                        JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
+                        Log.d("Send Money", decryptedResponse.toString());
+
+                        if (decryptedResponse.getJSONObject("status").getInt("code") != 200) {
+                            Toast.makeText(getApplicationContext(), "Error: " + decryptedResponse.getJSONObject("data").getString("message"), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        Toast.makeText(getApplicationContext(), "" + EncryptDecrypt.decrypt(response.get("enc_data").toString()), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Intent resultIntent = new Intent();
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                }, error -> Toast.makeText(getApplicationContext(), "Something went wrong[Send]", Toast.LENGTH_SHORT).show()) {
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers=new HashMap();
+                headers.put("Authorization","Bearer "+retrivedToken);
+                return headers;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
+    }
 }

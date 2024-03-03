@@ -7,6 +7,7 @@ import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,24 +50,27 @@ public class SendMoney extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendmoney);
-        tt=findViewById(R.id.actid);
-        Intent i =getIntent();
-        String p=i.getStringExtra(beneficiary_account_number);
+        tt = findViewById(R.id.actid);
+        Intent i = getIntent();
+        String p = i.getStringExtra(beneficiary_account_number);
         tt.setText(p);
-        send=findViewById(R.id.sendbutton);
+        send = findViewById(R.id.sendbutton);
+
+        send.setOnClickListener(v -> sendMoney());
     }
 
-
-
-    public void sendMoney(){
+    public void sendMoney() {
         SharedPreferences sharedPreferences = getSharedPreferences("jwt", Context.MODE_PRIVATE);
-        final String retrivedToken  = sharedPreferences.getString("accesstoken",null);
+        final String retrivedToken = sharedPreferences.getString("accesstoken", null);
         SharedPreferences sharedPreferences1 = getSharedPreferences("apiurl", Context.MODE_PRIVATE);
-        final String url  = sharedPreferences1.getString("apiurl",null);
+        final String url = sharedPreferences1.getString("apiurl", null);
         String endpoint = "/api/balance/transfer";
-        final String finalUrl = url+endpoint;
-        EditText ed = findViewById(R.id.edact);     // 수취계좌
-        EditText ed1 = findViewById(R.id.edamt);    // 이체금액
+        final String finalUrl = url + endpoint;
+
+        EditText ed = findViewById(R.id.edact);     // 송금계좌
+        EditText ed2 = findViewById(R.id.edact2);     // 수취계좌
+        EditText ed3 = findViewById(R.id.edamt);    // 이체금액
+        int from_account = 0;
         int to_account = 0;
         int amount = 0;
         String sendtime = dateFormat.format(currentDate);
@@ -75,135 +79,59 @@ public class SendMoney extends AppCompatActivity {
         JSONObject requestData = new JSONObject();
         JSONObject requestDataEncrypted = new JSONObject();
         try {
-
             // fetch values
-            if (ed.getText().toString() != "" && ed1.getText().toString() != "") {
-                to_account = Integer.parseInt(ed.getText().toString());
-                amount = Integer.parseInt(ed1.getText().toString());
+            if (!ed.getText().toString().isEmpty() && !ed2.getText().toString().isEmpty() && !ed3.getText().toString().isEmpty()) {
+                from_account = Integer.parseInt(ed.getText().toString());
+                to_account = Integer.parseInt(ed2.getText().toString());
+                amount = Integer.parseInt(ed3.getText().toString());
             } else {
                 Toast.makeText(getApplicationContext(), "Invalid Input ", Toast.LENGTH_SHORT).show();
                 onRestart();
             }
-            //input your API parameters
-            requestData.put("to_account", to_account);          // 수취계좌 varchar
-            requestData.put("amount", amount);                  // 이체금액 int
-            requestData.put("sendtime", sendtime);              // 전송시간 datetime
 
+            // input your API parameters
+            requestData.put("from_account", from_account);  // 송금계좌 varchar
+            requestData.put("to_account", to_account);      // 수취계좌 varchar
+            requestData.put("amount", amount);              // 이체금액 int
+            requestData.put("sendtime", sendtime);          // 전송시간 datetime
+
+            Log.d("formmmmmmmmmmmm", requestData.toString());
 
             // Encrypt data before sending
             requestDataEncrypted.put("enc_data", EncryptDecrypt.encrypt(requestData.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         // Enter the correct url for your api service site
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, finalUrl, requestDataEncrypted,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+                response -> {
+                    try {
+                        JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
+                        Log.d("Send Money", decryptedResponse.toString());
 
-                        try {
-
-                            JSONObject decryptedResponse =  new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
-                            Log.d("Send Money", decryptedResponse.toString());
-
-                            if(decryptedResponse.getJSONObject("status").getInt("code") != 200) {
-                                Toast.makeText(getApplicationContext(), "Error: " + decryptedResponse.getJSONObject("data").getString("message"), Toast.LENGTH_SHORT).show();
-
-                                return;
-                                // This is buggy. Need to call Login activity again if incorrect credentials are given
-                            }
-
-
-
-                            Toast.makeText(getApplicationContext(),""+EncryptDecrypt.decrypt(response.get("enc_data").toString()), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (decryptedResponse.getJSONObject("status").getInt("code") != 200) {
+                            Toast.makeText(getApplicationContext(), "Error: " + decryptedResponse.getJSONObject("data").getString("message"), Toast.LENGTH_SHORT).show();
+                            return;
                         }
 
-
-                        finish();
-
+                        Toast.makeText(getApplicationContext(), "" + EncryptDecrypt.decrypt(response.get("enc_data").toString()), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Something went wrong[Send]", Toast.LENGTH_SHORT).show();
-            }
-        }){
+
+                    Intent resultIntent = new Intent();
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                }, error -> Toast.makeText(getApplicationContext(), "Something went wrong[Send]", Toast.LENGTH_SHORT).show()) {
             @Override
             public Map getHeaders() throws AuthFailureError {
-                HashMap headers=new HashMap();
-                headers.put("Authorization","Bearer "+retrivedToken);
+                HashMap headers = new HashMap();
+                headers.put("Authorization", "Bearer " + retrivedToken);
                 return headers;
             }
-
-
         };
+
         requestQueue.add(jsonObjectRequest);
-
-
     }
-
-
-
-    public void Biometrics(View view){
-        BiometricManager biometricManager = BiometricManager.from(this);
-        switch (biometricManager.canAuthenticate()){
-
-            case BiometricManager.BIOMETRIC_SUCCESS:
-                Toast.makeText(this,"Authenticate to continue",Toast.LENGTH_LONG).show();
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-                Toast.makeText(this,"No fingerprint sensor",Toast.LENGTH_LONG).show();
-                send.setVisibility(View.INVISIBLE);
-
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-                Toast.makeText(this,"Biometric sensor is not available",Toast.LENGTH_LONG).show();
-                send.setVisibility(View.INVISIBLE);
-
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-                Toast.makeText(this,"Your device don't have any fingerprint, check your security setting",Toast.LENGTH_LONG).show();
-                send.setVisibility(View.INVISIBLE);
-                break;
-        }
-
-        Executor executor = ContextCompat.getMainExecutor(this);
-
-
-        final BiometricPrompt biometricPrompt = new BiometricPrompt(SendMoney.this,executor,new BiometricPrompt.AuthenticationCallback(){
-
-            @Override
-            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-            }
-
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                Toast.makeText(getApplicationContext(),"Transfer Successful",Toast.LENGTH_LONG).show();
-                sendMoney();
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-            }
-        });
-
-        final BiometricPrompt.PromptInfo  promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Login")
-                .setDescription("User fingerprint to Proceed")
-                .setDeviceCredentialAllowed(true)
-                .build();
-
-
-
-        biometricPrompt.authenticate(promptInfo);
-
-
-
-    }
-
 }
