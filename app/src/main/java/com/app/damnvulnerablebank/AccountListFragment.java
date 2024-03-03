@@ -10,9 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -136,20 +140,27 @@ public class AccountListFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_account_list, container, false);
     }
 
+
+
     private void updateRecyclerView(JSONArray dataArray) {
-        Log.d("API_RESPONSE", "JSON Response2222222222222: " + dataArray);
-        ArrayList<BankAccount> bankAccounts = convertJSONArrayToArrayList(dataArray);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("API_RESPONSE", "JSON Response2222222222222: " + dataArray);
+                ArrayList<BankAccount> bankAccounts = convertJSONArrayToArrayList(dataArray);
 
-        recyclerViewbankaccount.setHasFixedSize(true);
-        recyclerViewbankaccount.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerViewbankaccount.setHasFixedSize(true);
+                recyclerViewbankaccount.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        MyBankAccountAdapter myBankAccountAdapter = new MyBankAccountAdapter(bankAccounts, getActivity());
-        recyclerViewbankaccount.setAdapter(myBankAccountAdapter);
+                MyBankAccountAdapter myBankAccountAdapter = new MyBankAccountAdapter(bankAccounts, getActivity());
+                recyclerViewbankaccount.setAdapter(myBankAccountAdapter);
+            }
+        });
     }
 
     private ArrayList<BankAccount> convertJSONArrayToArrayList(JSONArray jsonArray) {
-        Log.d("API_RESPONSE", "JSON Response33333333333333333333: " + dataArray);
         ArrayList<BankAccount> bankAccounts = new ArrayList<>();
+        Log.d("API_RESPONSE", "lengthglafjsafaas: " + jsonArray.length());
 
         if (jsonArray != null) {
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -184,13 +195,75 @@ public class AccountListFragment extends Fragment {
         //setTotalMoney(myBankAccount);
         //text_view_name.setText("HELLO, " + mainUser.getName().toUpperCase()+".");
 
-        myBankAccount = convertJSONArrayToArrayList(dataArray);
+        OkHttpClient client2 = new OkHttpClient();
+        EncryptDecrypt endecryptor2 = new EncryptDecrypt();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
-        recyclerViewbankaccount.setHasFixedSize(true);
-        recyclerViewbankaccount.setLayoutManager(new LinearLayoutManager(getActivity()));
+        String apiUrl2 = "http://59.16.223.162:38888/api/Account/view";
 
-        MyBankAccountAdapter myBankAccountAdapter = new MyBankAccountAdapter(myBankAccount, getActivity());
-        recyclerViewbankaccount.setAdapter(myBankAccountAdapter);
+        RequestBody requestBody2 = new FormBody.Builder()
+                .add("username", "username")
+                .add("balance", "balance")
+                .add("account_number", "account_number")
+                .add("bank_code", "bank_code")
+                // 다른 필요한 데이터도 추가해주세요
+                .build();
+        Request request2 = new Request.Builder()
+                .url(apiUrl2)
+                .post(requestBody2)
+                .addHeader("Authorization", "1 " + retrivedToken2)
+                .build();
+
+        Log.d("request", "data " + request2);
+
+        String encryptedData2 = endecryptor2.encrypt(request2.toString());
+        Log.d("request", "data123123 " + encryptedData2);
+
+        // 비동기적으로 API 요청 보내기
+        client2.newCall(request2).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 요청 실패 처리
+                e.printStackTrace();
+                Log.e("API_RESPONSE", "JSON parsing error: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 요청 성공 시 처리
+                if (response.isSuccessful()) {
+                    String responseData2 = response.body().string();
+                    Log.d("API_RESPONSE", "JSON Response: " + responseData2);
+
+
+                    // 응답 데이터 파싱
+                    try {
+                        JSONObject jsonResponse3 = new JSONObject(responseData2);
+                        String encData2 = jsonResponse3.getString("enc_data");
+                        String data2 = endecryptor2.decrypt(encData2);
+                        Log.d("API_RESPONSE", "JSON Response: " + data2);
+
+                        JSONObject dataObject2 = new JSONObject(data2);
+
+                        dataArray = dataObject2.getJSONArray("data");
+
+                        Log.d("API_RESPONSE", "JSON Response: " + dataArray);
+
+                        updateRecyclerView(dataArray);
+
+                        // TODO: 가져온 값들을 사용하여 원하는 작업 수행
+                        // 예를 들면 UI 업데이트 등
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("API_RESPONSE", "Error: " + e.getMessage());
+                    }
+                } else {
+                    // 서버에서 오류 응답이 온 경우 처리
+                    // response.code() 및 response.message()를 통해 상세한 정보를 얻을 수 있음
+                }
+            }
+        });
     }
 
     public void define(){
@@ -283,8 +356,6 @@ public class AccountListFragment extends Fragment {
                                 String accountNumber = dataObject.getString("account_number");
                                 String bankCode = dataObject.getString("bank_code");
 
-                                // TODO: 가져온 값들을 사용하여 원하는 작업 수행
-                                // 예를 들면 UI 업데이트 등
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Log.e("API_RESPONSE", "Error: " + e.getMessage());
