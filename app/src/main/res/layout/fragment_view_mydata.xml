@@ -89,7 +89,8 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="0dp"
             android:text="마이데이터 등록하기"
-            android:autoSizeTextType="uniform" />
+            android:autoSizeTextType="uniform"
+            />
 
     </LinearLayout>
 
