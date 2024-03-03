@@ -39,12 +39,13 @@ public class MyBankAccountAdapter extends RecyclerView.Adapter<MyBankAccountAdap
             final BankAccount account = MyBankAccounts.get(position);
             holder.textviewmoney.setText(String.valueOf(account.getBalance()));
             holder.textviewbankno.setText(String.valueOf(account.getAccount_number()));
+            holder.textviewcode.setText(String.valueOf(account.getBank_code()));
         }
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return MyBankAccounts.size();
     }
 
 
@@ -52,13 +53,14 @@ public class MyBankAccountAdapter extends RecyclerView.Adapter<MyBankAccountAdap
 
         TextView textviewbankno;
         TextView textviewmoney;
+        TextView textviewcode;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textviewbankno = itemView.findViewById(R.id.text_view_bank_account_no);
             textviewmoney = itemView.findViewById(R.id.text_view_bank_account_money);
-
+            textviewcode = itemView.findViewById(R.id.text_view_bank_code);
         }
     }
 }

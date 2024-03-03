@@ -1,6 +1,8 @@
 package com.app.damnvulnerablebank;
 
 
+import android.util.Log;
+
 public class BankAccount {
     private String account_number;
     private String bank_code;
@@ -14,7 +16,7 @@ public class BankAccount {
     }
 
     public void setAccount_number(int account_number) {
-        this.account_number = "계좌번호:\n"+account_number+"\n";
+        this.account_number = account_number+"";
     }
 
     public int getBalance() {
@@ -30,7 +32,7 @@ public class BankAccount {
     }
 
     public void setBank_code(String bank_code) {
-        this.bank_code = "은행코드:\n"+bank_code+"\n";
+        this.bank_code=bank_code;
     }
 
     public String getUsername() {

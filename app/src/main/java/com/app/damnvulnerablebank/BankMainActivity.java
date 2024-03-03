@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -84,8 +85,6 @@ public class BankMainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId ()) {
-            case R.id.toolbar_mypage:
-                return true;
             case R.id.toolbar_logout:
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("jwt", MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
@@ -93,6 +92,10 @@ public class BankMainActivity extends AppCompatActivity {
                 editor.apply();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
+                return true;
+            case R.id.toolbar_mypage:
+                startActivity(new Intent(getApplicationContext(), Mypage.class));
+                return true;
             default:
                 return super.onOptionsItemSelected (item);
         }

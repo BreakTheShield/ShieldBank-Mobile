@@ -133,5 +133,80 @@ public class MydataFragment extends Fragment {
         return rootView;
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) { // 1은 startActivityForResult()에서 사용한 요청 코드입니다.
+            if (resultCode == Activity.RESULT_OK) {
+                // 활동이 성공적으로 반환된 경우
+                reqAccounts();
+            }
+        }
+    }
+
+    private void reqAccounts()
+    {
+        OkHttpClient client2 = new OkHttpClient();
+        EncryptDecrypt endecryptor2 = new EncryptDecrypt();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
+
+        String apiUrl2 = "http://59.16.223.162:38888/api/Mydata/req_account";
+
+        RequestBody requestBody2 = new FormBody.Builder()
+
+                // 다른 필요한 데이터도 추가해주세요
+                .build();
+
+        okhttp3.Request request2 = new okhttp3.Request.Builder()
+                .url(apiUrl2)
+                .post(requestBody2)
+                .addHeader("Authorization", "1 " + retrivedToken2)
+                .build();
+        String encryptedData2 = endecryptor2.encrypt(request2.toString());
+
+        Log.d("API_RESPONSE", "JSON Response: " + request2);
+        Log.d("API_RESPONSE", "JSON 22222222222222: " + requestBody2);
+        client2.newCall(request2).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 요청 실패 처리
+                e.printStackTrace();
+                Log.e("API_RESPONSE", "JSON parsing error: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                // 요청 성공 시 처리
+                if (response.isSuccessful()) {
+                    String responseData2 = response.body().string();
+                    Log.d("API_RESPONSE", "JSON Response: " + responseData2);
+
+
+                    // 응답 데이터 파싱
+                    try {
+                        JSONObject jsonResponse3 = new JSONObject(responseData2);
+                        String encData2 = jsonResponse3.getString("enc_data");
+                        String data2 = endecryptor2.decrypt(encData2);
+                        Log.d("API_RESPONSE", "JSON Response: " + data2);
+
+//                        JSONObject dataObject2 = new JSONObject(data2);
+//                        dataArray = dataObject2.getJSONArray("data");
+//                        JSONObject firstObject = dataArray.getJSONObject(0);
+//                        String username = firstObject.getString("username");
+//                        Log.d("API_RESPONSE", "user 뽑아오기: " + username);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("API_RESPONSE", "Error: " + e.getMessage());
+                    }
+                } else {
+                    // 서버에서 오류 응답이 온 경우 처리
+                    // response.code() 및 response.message()를 통해 상세한 정보를 얻을 수 있음
+                }
+            }
+        });
+    }
 
 }
