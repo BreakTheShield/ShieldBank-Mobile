@@ -48,6 +48,7 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity android:name=".Mydata_auth" />
         <activity android:name=".ResetPassword" />
         <activity android:name=".ViewBeneficiary" />
         <activity android:name=".ApproveBeneficiary" />

@@ -17,7 +17,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -31,15 +34,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.HttpUrl;
+
 public class MydataFragment extends Fragment {
-    LinearLayout mydata_sms_auth;
 
     private String phoneNumber;
     public String userName;
-
+    private JSONArray dataArray;
     private String user_name;
 
     @SuppressLint("WrongViewCast")
@@ -47,156 +57,81 @@ public class MydataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_mydata, container, false);
-        mydata_sms_auth = getView().findViewById(R.id.mydata_sms_auth);
-        Button myButton = rootView.findViewById(R.id.mydata_sms_auth);
+        //mydata_sms_auth = getView().findViewById(R.id.mydata_sms_auth);
+        Button mydata_sms_auth = rootView.findViewById(R.id.mydata_sms_auth);
+        OkHttpClient client2 = new OkHttpClient();
+        EncryptDecrypt endecryptor2 = new EncryptDecrypt();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
-        myButton.setOnClickListener(new View.OnClickListener() {
+        String apiUrl2 = "http://59.16.223.162:38888/api/Account/view";
+
+        RequestBody requestBody2 = new FormBody.Builder()
+                .add("username", "username")
+
+                // 다른 필요한 데이터도 추가해주세요
+                .build();
+        okhttp3.Request request2 = new okhttp3.Request.Builder()
+                .url(apiUrl2)
+                .post(requestBody2)
+                .addHeader("Authorization", "1 " + retrivedToken2)
+                .build();
+        String encryptedData2 = endecryptor2.encrypt(request2.toString());
+        client2.newCall(request2).enqueue(new Callback() {
             @Override
-            public void onClick(View v) {
-                // 클릭 시 실행할 코드 작성
-                //openPopup();
+            public void onFailure(Call call, IOException e) {
+                // 요청 실패 처리
+                e.printStackTrace();
+                Log.e("API_RESPONSE", "JSON parsing error: " + e.getMessage());
+            }
 
-                fetchPhoneNumberFromServer(new FetchPhoneNumberCallback() {
-                    @Override
-                    public void onComplete(String phoneNumber, String userName) {
-                        // fetchPhoneNumberFromServer 메서드가 완료된 후에 호출되는 콜백 메서드
-                        //Log.d("MyDataFragment", "Phone number1111: " + phoneNumber); // 로그에 출력
-                        Log.d("MyDataFragment", "User Name 2222: " + userName);
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                // 요청 성공 시 처리
+                if (response.isSuccessful()) {
+                    String responseData2 = response.body().string();
+                    Log.d("API_RESPONSE", "JSON Response: " + responseData2);
 
-                        user_name = userName;
 
+                    // 응답 데이터 파싱
+                    try {
+                        JSONObject jsonResponse3 = new JSONObject(responseData2);
+                        String encData2 = jsonResponse3.getString("enc_data");
+                        String data2 = endecryptor2.decrypt(encData2);
+                        Log.d("API_RESPONSE", "JSON Response: " + data2);
+
+                        JSONObject dataObject2 = new JSONObject(data2);
+                        dataArray = dataObject2.getJSONArray("data");
+                        JSONObject firstObject = dataArray.getJSONObject(0);
+                        String username = firstObject.getString("username");
+                        Log.d("API_RESPONSE", "user 뽑아오기: " + username);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("API_RESPONSE", "Error: " + e.getMessage());
                     }
-                });
-
+                } else {
+                    // 서버에서 오류 응답이 온 경우 처리
+                    // response.code() 및 response.message()를 통해 상세한 정보를 얻을 수 있음
+                }
             }
         });
+
         mydata_sms_auth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // "linear_layout_send_money" 버튼 클릭 시 실행할 코드
 
                 // Intent를 통해 새로운 Activity 시작
+                //Intent intent = new Intent(this, Mydata_auth.class);
                 Intent intent = new Intent(getActivity(), Mydata_auth.class);
                 //startActivity(intent);
                 startActivityForResult(intent, 1);
             }
         });
-        return inflater.inflate(R.layout.fragment_mydata, container, false);
+        return rootView;
     }
 
-    /*public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1) { // 1은 startActivityForResult()에서 사용한 요청 코드입니다.
-            if (resultCode == Activity.RESULT_OK) {
-                // 활동이 성공적으로 반환된 경우
-                fetchAccountData();
-            }
-        }
-    }*/
-
-    // 서버에서 phone_number를 가져오는 메서드
-    private void fetchPhoneNumberFromServer(final FetchPhoneNumberCallback callback) {
-        // SharedPreferences에서 API URL 가져오기
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
-        String url = sharedPreferences.getString("apiurl", null);
-
-        if (url != null) {
-            // API URL이 정상적으로 설정되어 있을 때만 요청을 보냄
-            String endpoint = "/api/user/profile";
-            String finalUrl = url + endpoint;
-
-            // Volley RequestQueue 생성
-            RequestQueue queue = Volley.newRequestQueue(getActivity());
-
-            // JWT 토큰 가져오기
-            SharedPreferences tokenPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
-            final String accessToken = tokenPreferences.getString("accesstoken", null);
-
-            if (accessToken != null) {
-                // 헤더 설정
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, finalUrl, null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
-                                    String phoneNumber = decryptedResponse.getJSONObject("data").getString("phone");
-                                    String userName = decryptedResponse.getJSONObject("data").getString("username");
-                                    // 클릭이 잘 되었는지 로그로 확인
-                                    //Log.d("MyDataFragment", "Phone number: " + phoneNumber);
-                                    Log.d("MyDataFragment", "User Name : " + userName);
-
-
-                                    // 콜백을 통해 결과 전달
-                                    callback.onComplete(phoneNumber, userName);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("MyDataFragment", "Error fetching phone number: " + error.getMessage());
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> headers = new HashMap<>();
-                        headers.put("Authorization", "Bearer " + accessToken);
-                        return headers;
-                    }
-                };
-
-                // 요청을 큐에 추가
-                queue.add(jsonObjectRequest);
-            } else {
-                Log.e("MyDataFragment", "Access token is null");
-            }
-        } else {
-            Log.e("MyDataFragment", "API URL is null");
-        }
-    }
-    private String processUserName(String userName) {
-        // userName을 사용하는 로직 작성
-        Log.d("MyDataFragment", "1233323 user name: " + userName);
-        user_name = userName;
-        Log.d("MyDataFragment", "3231213123213213 user name: " + user_name);
-        // 이후 필요한 작업 수행
-        return user_name;
-    }
-    private void openPopup() {
-        // 팝업창을 띄우는 코드 작성
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.fragment_sms_mydata, null); // 팝업창에 사용할 XML 파일
-        EditText editTextNumber = dialogView.findViewById(R.id.editTextNumber);
-
-        builder.setView(dialogView)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // OK 버튼 클릭 시 처리할 내용 작성
-                        String auth_number = editTextNumber.getText().toString();
-                        // 여기서 입력된 숫자를 사용하여 원하는 동작을 수행할 수 있음
-                        Toast.makeText(getContext(), "AUThNumber entered: " + auth_number, Toast.LENGTH_SHORT).show();
-                        Log.d("MyDataFragment", "auth num is : " + auth_number);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Cancel 버튼 클릭 시 처리할 내용 작성
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    // 콜백 인터페이스 정의
-    interface FetchPhoneNumberCallback {
-        void onComplete(String phoneNumber, String userName);
-    }
 
 }
