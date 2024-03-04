@@ -39,6 +39,7 @@ public class HomeFragment extends Fragment {
 
     TextView tv_account;
     TextView tv_balance;
+    TextView tv_user;
     RequestQueue queue;
     RecyclerView recyclerView_notice;
     RecyclerView recyclerView_qna;
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment {
 
         tv_account = homeView.findViewById(R.id.textview_account_number);
         tv_balance = homeView.findViewById(R.id.textview_balance);
+        tv_user    = homeView.findViewById(R.id.tv_home_username);
 
         recyclerView_notice = homeView.findViewById(R.id.announcelist); // Assuming the RecyclerView ID is 'recycler_view' in your layout
         recyclerView_notice.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -93,6 +95,7 @@ public class HomeFragment extends Fragment {
                                 return;
                             }
                             JSONObject obj = decryptedResponse.getJSONObject("data");
+                            String username=obj.getString("username");
                             String balance=obj.getString("balance");
                             String account_number =obj.getString("account_number");
 
@@ -107,6 +110,7 @@ public class HomeFragment extends Fragment {
 
                             tv_account.setText(account_number);
                             tv_balance.setText(formattedBalance);
+                            tv_user.setText(username+" 님 반갑습니다 !!!");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
