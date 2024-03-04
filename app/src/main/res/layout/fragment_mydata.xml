@@ -1,96 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- 첫 번째 칸 -->
-    <LinearLayout
+    <!-- 첫 번째 카드뷰 -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.6"
-        android:background="@drawable/frame"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="16dp">
 
-        <!-- 첫 번째 칸에 들어갈 내용 -->
-        <TextView
-            android:id="@+id/text_view_portfolio"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:autoSizeTextType="uniform"
-            android:text="000님,\n흩어져있는 내 자산 연결하고 \n한번에 관리하세요"
-            android:textColor="@color/black"
-            android:textStyle="bold"></TextView>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.8"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:autoSizeTextType="uniform"
-            android:text="Mydata 기능은 한번에 여러 계좌의 자산들을 손쉽게 정리할 수 있는 서비스 입니다."
-            android:textColor="@color/gray" />
+            <!-- 첫 번째 칸에 들어갈 내용 -->
+            <TextView
+                android:id="@+id/text_view_portfolio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="000님,\n흩어져있는 내 자산 연결하고\n한번에 관리하세요" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:text="Mydata 기능은 한번에 여러 계좌의 자산들을 손쉽게 정리할 수 있는 서비스 입니다." />
 
-    <!-- 두 번째 칸 -->
-    <LinearLayout
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- 두 번째 카드뷰 -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/frame"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="16dp">
 
-        <!-- 두 번째 칸에 들어갈 내용 -->
-        <TextView
-
-            android:id="@+id/text_view_credit_cards"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="3"
-            android:text="추천 금융기관"
-            android:textColor="@color/black"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMaxTextSize="40sp"
-            android:textStyle="bold"></TextView>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_credit_card"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            tools:layout_editor_absoluteX="167dp"
-            tools:layout_editor_absoluteY="213dp" />
+            <!-- 두 번째 칸에 들어갈 내용 -->
+            <TextView
+                android:id="@+id/text_view_credit_cards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="추천 금융기관" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/recyclerview_credit_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="º 국X은행\nº 우X은행\nº 기X은행\nº 농X은행" />
 
-    <!-- 세 번째 칸 -->
-    <LinearLayout
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="º 소드뱅크\n"
+                android:textColor="@color/purple"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:autoSizeMaxTextSize="20sp"
+                 />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- 세 번째 카드뷰 -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:background="@drawable/frame"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="3dp">
 
-        <!-- 세 번째 칸에 들어갈 내용 -->
-        <Button
-            android:id="@+id/mydata_sms_auth"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="0dp"
-            android:text="마이데이터 인증 요청하기"
-            android:autoSizeTextType="uniform" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    </LinearLayout>
+            <!-- 세 번째 칸에 들어갈 내용 -->
+            <Button
+                android:id="@+id/mydata_sms_auth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="마이데이터 인증 요청하기"
+                android:textColor="@color/white"
+                android:background="@color/purple"
+                android:textSize="18sp"
+                android:padding="16dp"
+                android:stateListAnimator="@null"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

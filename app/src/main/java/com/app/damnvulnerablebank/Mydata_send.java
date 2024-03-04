@@ -6,17 +6,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -35,13 +38,16 @@ import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class Mydata_send extends AppCompatActivity {
 
     Button send;
     private JSONArray dataArray;
     RecyclerView recyclerViewbankaccount;
+    LinearLayout secondLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +161,25 @@ public class Mydata_send extends AppCompatActivity {
 
         return bankAccounts;
     }
+
+    public void click(@NonNull MydataAccountAdapter.ViewHolder holder, final int position) {
+        // "linear_layout_send_money" 버튼 클릭 이벤트 처리 코드
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            // Mydata_sendMoney 액티비티의 결과 처리
+            if (resultCode == Activity.RESULT_OK) {
+                reqAccounts();
+            } else {
+                // 취소 또는 실패한 결과 처리 코드
+            }
+        }
+    }
+
 
     public void define(){
         recyclerViewbankaccount = Mydata_send.this.findViewById(R.id.recyclerview_bank_account);

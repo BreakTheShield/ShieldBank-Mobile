@@ -1,5 +1,6 @@
 package com.app.damnvulnerablebank;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,24 +29,130 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
+
+
 import android.util.Log;
 
 public class TransactionFragment extends Fragment {
     private ViewGroup rootView;
     private TransactionAdapter adapter;
+    private int selectedYear, selectedMonth, selectedDay;
+    private String tripstart;
+    private String tripend;
+    // 서울시간 현재 시간 구하기
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    long now = System.currentTimeMillis();
+    Date date = new Date(now);
+    String seoultime = sdf.format(date);
 
+
+
+
+    private void showStartDatePicker(View view) {
+        showDatePickerDialog((Button) view, true); //true는 시작일
+
+    }
+
+    private void showEndDatePicker(View view) {
+        showDatePickerDialog((Button) view, false); //false는 종료일
+
+    }
+    private void showDatePickerDialog(final Button dateButton,final boolean isStartDate) {
+        final Calendar currentDate = Calendar.getInstance();
+        int year = currentDate.get(Calendar.YEAR);
+        int month = currentDate.get(Calendar.MONTH);
+        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        selectedYear = year;
+                        selectedMonth = monthOfYear;
+                        selectedDay = dayOfMonth;
+
+                        // 선택된 날짜를 TextView에 표시
+                        dateButton.setText(selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay);
+
+                        if (isStartDate) {
+                            tripstart = dateButton.getText().toString();
+                        } else {
+                            tripend = dateButton.getText().toString();
+                        }
+                    }
+                },
+                year,
+                month,
+                day
+        );
+
+        datePickerDialog.show();
+    }
+
+
+    private void onSearchButtonClick() {
+
+        getTransaction(tripstart+" 00:00:00",tripend+" 23:59:59");
+    }
+
+//234506, 153145
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_transaction, container, false);
-        getTransaction();
+
+        //버튼에 대한 뷰를 연결
+        Button btnSelectStartDate = rootView.findViewById(R.id.btn_select_start_date);
+        Button btnSelectEndDate = rootView.findViewById(R.id.btn_select_end_date);
+        Button btnSearchDate = rootView.findViewById(R.id.btn_search_date);
+
+        // 시작일 선택 버튼 클릭 리스너 설정
+        btnSelectStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showStartDatePicker(v);
+            }
+        });
+
+        // 종료일 선택 버튼 클릭 리스너 설정
+        btnSelectEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEndDatePicker(v);
+            }
+        });
+
+        btnSearchDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call a method or perform actions when the search button is clicked
+                onSearchButtonClick();
+            }
+        });
+
+        String init_start_date = "1998-02-20 00:00:00";
+        String init_end_date = seoultime;
+        getTransaction(init_start_date, init_end_date);
         return rootView;
     }
 
-    public void getTransaction() {
+    @Override
+    public void onResume() {
+        String init_start_date = "1998-02-20 00:00:00";
+        String init_end_date = seoultime;
+        super.onResume();
+        getTransaction(init_start_date,init_end_date);
+    }
+
+    public void getTransaction(String start_date, String end_date) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
         final String url = sharedPreferences.getString("apiurl", null);
         String endpoint = "/api/transactions/view/search";
@@ -51,8 +161,8 @@ public class TransactionFragment extends Fragment {
         // JSON 데이터 생성
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("tripstart", "1998-02-20 00:00:00");
-            jsonBody.put("tripend", "2024-03-03 00:00:00");
+            jsonBody.put("tripstart", start_date);
+            jsonBody.put("tripend", end_date);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -81,8 +191,7 @@ public class TransactionFragment extends Fragment {
                                 // This is buggy. Need to call Login activity again if incorrect credentials are given
                             }
 
-                            // JSONArray jsonArray = decryptedResponse.getJSONObject("data").getJSONArray("result");
-                            // Log.d("Decrypted Data2", String.valueOf(jsonArray));
+
                             List<JSONObject> transactionList = new ArrayList<>();
                             try {
                                 JSONArray jsonArray = decryptedResponse.getJSONObject("data").getJSONArray("result");
