@@ -22,7 +22,6 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:autoSizeTextType="uniform"
-            android:text="000님,\n흩어져있는 내 자산 연결하고 \n한번에 관리하세요"
             android:textColor="@color/black"
             android:textStyle="bold"></TextView>
 
@@ -62,14 +61,16 @@
             android:autoSizeMaxTextSize="40sp"
             android:textStyle="bold"></TextView>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <TextView
             android:id="@+id/recyclerview_credit_card"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:text="º 국X은행\nº 우X은행\nº 기X은행\nº 소드뱅크\nº 농X은행\n"
             android:layout_marginTop="10dp"
+            android:autoSizeTextType="uniform"
             tools:layout_editor_absoluteX="167dp"
-            tools:layout_editor_absoluteY="213dp" />
+            tools:layout_editor_absoluteY="213dp"></TextView>
 
     </LinearLayout>
 
