@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -64,6 +65,13 @@ public class MydataFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
+        SharedPreferences mysharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", ""); // 저장된 사용자 이름이 없을 경우 빈 문자열을 반환합니다.
+
+        // XML 레이아웃에서 TextView를 찾아 사용자 이름을 설정합니다.
+        TextView textViewPortfolio = rootView.findViewById(R.id.text_view_portfolio);
+        textViewPortfolio.setText(username + "님,\n흩어져있는 내 자산 연결하고 \n한번에 관리하세요");
+
         String apiUrl2 = "http://59.16.223.162:38888/api/Account/view";
 
         RequestBody requestBody2 = new FormBody.Builder()
@@ -106,6 +114,15 @@ public class MydataFragment extends Fragment {
                         String username = firstObject.getString("username");
                         Log.d("API_RESPONSE", "user 뽑아오기: " + username);
 
+                        // SharedPreferences에 사용자 이름 저장
+                        SharedPreferences mysharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = mysharedPreferences.edit();
+                        editor.putString("username", username); // "username" 키로 사용자 이름 저장
+                        editor.apply(); // 변경 사항 저장
+
+                        TextView textViewPortfolio = getView().findViewById(R.id.text_view_portfolio);
+                        textViewPortfolio.setText(username + "님,\n흩어져있는 내 자산 연결하고 \n한번에 관리하세요");
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -139,7 +156,9 @@ public class MydataFragment extends Fragment {
         if (requestCode == 1) { // 1은 startActivityForResult()에서 사용한 요청 코드입니다.
             if (resultCode == Activity.RESULT_OK) {
                 // 활동이 성공적으로 반환된 경우
-                reqAccounts();
+                Intent intent = new Intent(getActivity(), Mydata_send.class);
+                startActivity(intent);
+                //reqAccounts();
             }
         }
     }
