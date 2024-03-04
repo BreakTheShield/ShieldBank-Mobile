@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,10 +66,29 @@ import okhttp3.*;
 
 public class LoanFragment extends Fragment {
 
+    // LoanFragment 열기
+    private void openLoanFragment() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        Fragment loanFragment = fragmentManager.findFragmentByTag("LoanFragment");
+        fragmentManager.beginTransaction().hide(LoanFragment.this).commit();
+        loanFragment = new LoanFragment();
+        fragmentManager.beginTransaction().add(((ViewGroup) getView().getParent()).getId(), loanFragment, "LoanFragment").commit();
+
+    }
+
+    // LoanFragment 닫기
+    private void closeLoanFragment() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        Fragment loanFragment = fragmentManager.findFragmentByTag("LoanFragment");
+        if (loanFragment != null && loanFragment.isVisible()) {
+            fragmentManager.beginTransaction().hide(loanFragment).commit();
+        }
+        fragmentManager.beginTransaction().show(LoanFragment.this).commit();
+    }
+
     public interface LoanCallback {
         void onLoanResult(String isLoan) throws JSONException;
     }
-
 
     public void Loan(final LoanCallback callback) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
@@ -183,18 +203,22 @@ public class LoanFragment extends Fragment {
                     // 상환버튼
                     final Button repaymentButton = loanYView.findViewById(R.id.repayment_debt_button);
                     repaymentButton.setOnClickListener(new View.OnClickListener() {
+                        @SuppressLint("ResourceType")
                         @Override
                         public void onClick(View v) {
                             repayment_debt(rootView);
+                            openLoanFragment();
                         }
                     });
 
                     // 취소버튼
                     final Button cancelDebtButton = loanYView.findViewById(R.id.cancel_debt_button);
                     cancelDebtButton.setOnClickListener(new View.OnClickListener() {
+                        @SuppressLint("ResourceType")
                         @Override
                         public void onClick(View v) {
                             cancel_debt(rootView);
+                            openLoanFragment();
                         }
                     });
 
@@ -221,7 +245,7 @@ public class LoanFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             get_debt(rootView);
-
+                            openLoanFragment();
                         }
                     });
 
@@ -231,76 +255,6 @@ public class LoanFragment extends Fragment {
         });
 
         return rootView;
-    }
-
-    public void Loan2() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
-        final String retrivedToken = sharedPreferences.getString("accesstoken", null);
-        final RequestQueue queue = Volley.newRequestQueue(getActivity());
-        sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
-        final String url = sharedPreferences.getString("apiurl", null);
-        String endpoint = "/api/loan/loan";
-        String finalurl = url + endpoint;
-
-        final JsonObjectRequest stringRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, finalurl, null,
-                new com.android.volley.Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
-                            // Check for error message
-                            if (decryptedResponse.getJSONObject("status").getInt("code") == 200) {
-                                JSONObject dataObject = decryptedResponse.getJSONObject("data");
-                                // Extracting required data
-                                JSONArray loanAmountArray = dataObject.getJSONArray("loan_amount");
-                                JSONArray accountNumberArray = dataObject.getJSONArray("account_number");
-                                JSONArray balanceArray = dataObject.getJSONArray("balance");
-                                int statusCode = decryptedResponse.getJSONObject("status").getInt("code");
-
-                                // Constructing JSON object
-                                JSONObject loanData = new JSONObject();
-                                loanData.put("loan_amount", loanAmountArray);
-                                loanData.put("account_number", accountNumberArray);
-                                loanData.put("balance", balanceArray);
-                                loanData.put("status_code", statusCode);
-
-                                //callback.onLoanResult(String.valueOf(loanData));
-
-                            } else if (decryptedResponse.getJSONObject("status").getInt("code") == 400) {
-                                JSONObject dataObject = decryptedResponse.getJSONObject("data");
-                                // Extracting required data
-                                JSONArray accountNumberArray = dataObject.getJSONArray("account_number");
-                                int statusCode = decryptedResponse.getJSONObject("status").getInt("code");
-
-                                // Constructing JSON object
-                                JSONObject loanData = new JSONObject();
-                                loanData.put("account_number", accountNumberArray);
-                                loanData.put("status_code", statusCode);
-
-                                //callback.onLoanResult(String.valueOf(loanData));
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            public Map getHeaders() throws AuthFailureError {
-                HashMap headers = new HashMap();
-                headers.put("Authorization", "Bearer " + retrivedToken);
-                return headers;
-            }
-        };
-
-        queue.add(stringRequest);
-        queue.getCache().clear();
     }
 
     // 대출 버튼 함수
@@ -404,6 +358,8 @@ public class LoanFragment extends Fragment {
                         try {
                             String message = response.getJSONObject("data").getString("message");
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
