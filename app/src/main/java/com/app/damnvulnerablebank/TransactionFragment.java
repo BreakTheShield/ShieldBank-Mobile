@@ -101,7 +101,7 @@ public class TransactionFragment extends Fragment {
 
     private void onSearchButtonClick() {
 
-        getTransaction(tripstart+" 00:00:00",tripend+" 11:59:59");
+        getTransaction(tripstart+" 00:00:00",tripend+" 23:59:59");
     }
 
 //234506, 153145
