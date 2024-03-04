@@ -1,21 +1,28 @@
 package com.app.damnvulnerablebank;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MydataAccountAdapter extends RecyclerView.Adapter<MydataAccountAdapter.ViewHolder> {
 
 
     ArrayList<BankAccount> MyBankAccounts;
     Activity context;
+
 
     public MydataAccountAdapter(ArrayList<BankAccount> myData, Activity activity) {
         this.MyBankAccounts = myData;
@@ -40,6 +47,22 @@ public class MydataAccountAdapter extends RecyclerView.Adapter<MydataAccountAdap
             holder.textviewmoney.setText(String.valueOf(account.getBalance()));
             holder.textviewbankno.setText(String.valueOf(account.getAccount_number()));
             holder.textviewcode.setText(String.valueOf(account.getBank_code()));
+
+            holder.secondLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 클릭 이벤트를 처리하는 메소드 호출
+                    int adapterPosition = holder.getAdapterPosition();
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        ((Mydata_send) context).click(holder, adapterPosition);
+                    }
+                    Log.d("API_RESPONSE", "12312321312312312: " + holder.textviewbankno.getText().toString());
+                    Intent intent = new Intent(context, Mydata_sendMoney.class);
+                    intent.putExtra("account_number", holder.textviewbankno.getText().toString());
+                    ((Mydata_send) context).startActivityForResult(intent, 1);
+                    //context.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -54,6 +77,7 @@ public class MydataAccountAdapter extends RecyclerView.Adapter<MydataAccountAdap
         TextView textviewbankno;
         TextView textviewmoney;
         TextView textviewcode;
+        LinearLayout secondLinearLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +85,7 @@ public class MydataAccountAdapter extends RecyclerView.Adapter<MydataAccountAdap
             textviewbankno = itemView.findViewById(R.id.text_view_bank_account_no);
             textviewmoney = itemView.findViewById(R.id.text_view_bank_account_money);
             textviewcode = itemView.findViewById(R.id.text_view_bank_code);
+            secondLinearLayout = itemView.findViewById(R.id.secondLinearLayout);
         }
     }
 }
