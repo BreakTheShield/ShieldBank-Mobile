@@ -29,11 +29,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
+
+
 import android.util.Log;
 
 public class TransactionFragment extends Fragment {
@@ -42,6 +47,13 @@ public class TransactionFragment extends Fragment {
     private int selectedYear, selectedMonth, selectedDay;
     private String tripstart;
     private String tripend;
+    // 서울시간 현재 시간 구하기
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    long now = System.currentTimeMillis();
+    Date date = new Date(now);
+    String seoultime = sdf.format(date);
+
+
 
 
     private void showStartDatePicker(View view) {
@@ -127,7 +139,7 @@ public class TransactionFragment extends Fragment {
         });
 
         String init_start_date = "1998-02-20 00:00:00";
-        String init_end_date = "2024-03-05 00:00:00";
+        String init_end_date = seoultime;
         getTransaction(init_start_date, init_end_date);
         return rootView;
     }
@@ -135,7 +147,7 @@ public class TransactionFragment extends Fragment {
     @Override
     public void onResume() {
         String init_start_date = "1998-02-20 00:00:00";
-        String init_end_date = "2024-03-05 00:00:00";
+        String init_end_date = seoultime;
         super.onResume();
         getTransaction(init_start_date,init_end_date);
     }
