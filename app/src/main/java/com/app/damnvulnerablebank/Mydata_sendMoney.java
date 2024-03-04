@@ -89,7 +89,7 @@ public class Mydata_sendMoney extends AppCompatActivity {
                 if (!ed2.getText().toString().isEmpty() && !ed4.getText().toString().isEmpty()) {
                     from_bankcode = 333;
                     from_account = Integer.parseInt(tt.getText().toString());
-                    to_bankcode = Integer.parseInt(ed4.getText().toString());
+                    to_bankcode = Integer.parseInt(ed3.getText().toString());
                     to_account = Integer.parseInt(ed2.getText().toString());
                     amount = Integer.parseInt(ed4.getText().toString());
                 } else {
@@ -98,7 +98,6 @@ public class Mydata_sendMoney extends AppCompatActivity {
                 }
 
                 // input your API parameters
-                requestData.put("from_bankcode", from_bankcode);  // 송금계좌 varchar
                 requestData.put("from_account", from_account);  // 송금계좌 varchar
                 requestData.put("bank_code", to_bankcode);      // 수취계좌 varchar
                 requestData.put("to_account", to_account);      // 수취계좌 varchar
@@ -169,7 +168,7 @@ public class Mydata_sendMoney extends AppCompatActivity {
                 if (!ed2.getText().toString().isEmpty() && !ed4.getText().toString().isEmpty()) {
                     from_bankcode = 333;
                     from_account = Integer.parseInt(tt.getText().toString());
-                    to_bankcode = Integer.parseInt(ed4.getText().toString());
+                    to_bankcode = Integer.parseInt(ed3.getText().toString());
                     to_account = Integer.parseInt(ed2.getText().toString());
                     amount = Integer.parseInt(ed4.getText().toString());
                 } else {
@@ -178,7 +177,6 @@ public class Mydata_sendMoney extends AppCompatActivity {
                 }
 
                 // input your API parameters
-                requestData.put("bank_code", from_bankcode);      // 수취계좌 varchar
                 requestData.put("from_account", from_account);  // 송금계좌 varchar
                 requestData.put("bank_code", to_bankcode);      // 수취계좌 varchar
                 requestData.put("to_account", to_account);      // 수취계좌 varchar
