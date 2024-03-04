@@ -23,28 +23,27 @@
         android:padding="8dp">
 
         <!-- 시작 날짜 검색 -->
-        <EditText
-            android:id="@+id/edit_text_start_date"
+        <Button
+            android:id="@+id/btn_select_start_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:hint="검색 시작일"
-            android:focusable="false"
+            android:text="검색 시작일"
             android:onClick="showStartDatePicker" />
 
         <!-- 종료 날짜 검색 -->
-        <EditText
-            android:id="@+id/edit_text_end_date"
+        <Button
+            android:id="@+id/btn_select_end_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="검색 종료일"
-            android:focusable="false"
+            android:text="검색 종료일"
             android:onClick="showEndDatePicker" />
 
         <!-- 검색 버튼 또는 이미지 버튼 추가 -->
         <Button
+            android:id="@+id/btn_search_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="검색"
