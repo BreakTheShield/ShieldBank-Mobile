@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,6 +62,9 @@ import okhttp3.*;
 
 
 public class LoanFragment extends Fragment {
+
+
+
 
     public interface LoanCallback {
         void onLoanResult(String isLoan) throws JSONException;
@@ -137,6 +142,21 @@ public class LoanFragment extends Fragment {
     }
 
 
+    private void recreateFragmentView(Bundle savedInstanceState) {
+        // LayoutInflater를 가져옵니다.
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+
+        // 현재 프래그먼트의 레이아웃을 다시 생성합니다.
+        View newView = onCreateView(inflater, (ViewGroup) getView(), savedInstanceState);
+
+        // 기존 뷰를 제거하고 새로운 뷰를 추가합니다.
+        ViewGroup rootView = (ViewGroup) getView();
+        if (rootView != null) {
+            rootView.removeAllViews();
+            rootView.addView(newView);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_loan_n, container, false);
@@ -150,6 +170,7 @@ public class LoanFragment extends Fragment {
             public void onClick(View v) {
                 // 대출 요청 처리
                 requestLoan();
+
             }
         });
 
