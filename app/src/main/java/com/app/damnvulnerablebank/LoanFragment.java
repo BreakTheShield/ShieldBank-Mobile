@@ -1,5 +1,7 @@
 package com.app.damnvulnerablebank;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -66,7 +70,7 @@ public class LoanFragment extends Fragment {
     }
 
 
-    public void getLoan(final LoanCallback callback) {
+    public void Loan(final LoanCallback callback) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken = sharedPreferences.getString("accesstoken", null);
         final RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -139,29 +143,16 @@ public class LoanFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_loan_n, container, false);
-
-        // 대출 버튼에 대한 클릭 리스너 설정
-        Button getDebtButton = rootView.findViewById(R.id.get_debt_button);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_loan_roading, container, false);
 
 
-        getDebtButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 대출 요청 처리
-                requestLoan();
-            }
-        });
-
-        getLoan(new LoanCallback() {
+        Loan(new LoanCallback() {
             @Override
             public void onLoanResult(String loanData) throws JSONException {
-                Log.d("loanData", loanData);
 
                 JSONObject jsonObject = new JSONObject(loanData);
                 String statusCode = jsonObject.getString("status_code");
-//                JSONArray balanceArray = jsonObject.getJSONArray("balance");
-                Log.d("statusCode123", statusCode);
+//              JSONArray balanceArray = jsonObject.getJSONArray("balance");
 
                 rootView.removeAllViews();
 
@@ -189,9 +180,27 @@ public class LoanFragment extends Fragment {
                         debtBalanceTextView.setText("대출 잔액: " + loanAmountArray.getInt(0));
                     }
 
+                    // 상환버튼
+                    final Button repaymentButton = loanYView.findViewById(R.id.repayment_debt_button);
+                    repaymentButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            repayment_debt(rootView);
+                        }
+                    });
+
+                    // 취소버튼
+                    final Button cancelDebtButton = loanYView.findViewById(R.id.cancel_debt_button);
+                    cancelDebtButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cancel_debt(rootView);
+                        }
+                    });
+
                     rootView.addView(loanYView, params);
 
-                } else if (statusCode.equals("400")){
+                } else if (statusCode.equals("400")) {
                     // Show fragment_loan_n layout
                     loanNView = inflater.inflate(R.layout.fragment_loan_n, container, false);
                     JSONArray accountNumberArray = jsonObject.getJSONArray("account_number");
@@ -205,6 +214,17 @@ public class LoanFragment extends Fragment {
                     }
                     accountSpinner.setAdapter(accountAdapter);
 
+                    // 대출버튼
+                    final Button getDebtButton = loanNView.findViewById(R.id.get_debt_button);
+                    getDebtButton.setOnClickListener(new View.OnClickListener() {
+                        @SuppressLint("ResourceType")
+                        @Override
+                        public void onClick(View v) {
+                            get_debt(rootView);
+
+                        }
+                    });
+
                     rootView.addView(loanNView, params);
                 }
             }
@@ -213,8 +233,78 @@ public class LoanFragment extends Fragment {
         return rootView;
     }
 
-    // 대출 요청 메서드
-    private void requestLoan() {
+    public void Loan2() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken = sharedPreferences.getString("accesstoken", null);
+        final RequestQueue queue = Volley.newRequestQueue(getActivity());
+        sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
+        final String url = sharedPreferences.getString("apiurl", null);
+        String endpoint = "/api/loan/loan";
+        String finalurl = url + endpoint;
+
+        final JsonObjectRequest stringRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, finalurl, null,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
+                            // Check for error message
+                            if (decryptedResponse.getJSONObject("status").getInt("code") == 200) {
+                                JSONObject dataObject = decryptedResponse.getJSONObject("data");
+                                // Extracting required data
+                                JSONArray loanAmountArray = dataObject.getJSONArray("loan_amount");
+                                JSONArray accountNumberArray = dataObject.getJSONArray("account_number");
+                                JSONArray balanceArray = dataObject.getJSONArray("balance");
+                                int statusCode = decryptedResponse.getJSONObject("status").getInt("code");
+
+                                // Constructing JSON object
+                                JSONObject loanData = new JSONObject();
+                                loanData.put("loan_amount", loanAmountArray);
+                                loanData.put("account_number", accountNumberArray);
+                                loanData.put("balance", balanceArray);
+                                loanData.put("status_code", statusCode);
+
+                                //callback.onLoanResult(String.valueOf(loanData));
+
+                            } else if (decryptedResponse.getJSONObject("status").getInt("code") == 400) {
+                                JSONObject dataObject = decryptedResponse.getJSONObject("data");
+                                // Extracting required data
+                                JSONArray accountNumberArray = dataObject.getJSONArray("account_number");
+                                int statusCode = decryptedResponse.getJSONObject("status").getInt("code");
+
+                                // Constructing JSON object
+                                JSONObject loanData = new JSONObject();
+                                loanData.put("account_number", accountNumberArray);
+                                loanData.put("status_code", statusCode);
+
+                                //callback.onLoanResult(String.valueOf(loanData));
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Authorization", "Bearer " + retrivedToken);
+                return headers;
+            }
+        };
+
+        queue.add(stringRequest);
+        queue.getCache().clear();
+    }
+
+    // 대출 버튼 함수
+    public void get_debt(View rootView) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken = sharedPreferences.getString("accesstoken", null);
         final RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -223,26 +313,153 @@ public class LoanFragment extends Fragment {
         String endpoint = "/api/loan/get_debt";
         String finalurl = url + endpoint;
 
+        // 파라미터 설정
         JSONObject requestBody = new JSONObject();
         try {
-            // 여기서 필요한 요청 데이터를 추가하세요 (예: 사용자 이름, 대출 금액 등)
-            requestBody.put("username", "사용자 이름");
+            // fragment_loan_n에서 선택한 account_number 가져오기
+            Spinner accountSpinner = rootView.findViewById(R.id.account_list_spinner_n);
+            String accountNumber = accountSpinner.getSelectedItem().toString();
+
+            // 서울시간 현재 시간 구하기
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+            String seoulTime = sdf.format(new Date());
+
+            // 요청에 필요한 데이터 설정
+            requestBody.put("account_number", accountNumber);
             requestBody.put("loan_amount", "50000000");
-            // 계좌 선택과 관련된 데이터를 추가할 수도 있습니다.
+            requestBody.put("loan_time", seoulTime);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        JsonObjectRequest request = new JsonObjectRequest(com.android.volley.Request.Method.POST, finalurl, requestBody,
+        // 요청 보내기
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, finalurl, requestBody,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         // 대출 요청 성공 시 처리
                         try {
-                            // 응답 처리 코드 추가
                             String message = response.getJSONObject("data").getString("message");
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                            // 대출 상태 업데이트 등 추가 작업 수행 가능
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // 대출 요청 실패 시 처리
+                        Toast.makeText(getActivity(), "대출 요청 실패", Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + retrivedToken);
+                return headers;
+            }
+        };
+
+        queue.add(request);
+    }
+
+    // 상환 버튼 함수
+    public void repayment_debt(View rootView) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken = sharedPreferences.getString("accesstoken", null);
+        final RequestQueue queue = Volley.newRequestQueue(getActivity());
+        sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
+        final String url = sharedPreferences.getString("apiurl", null);
+        String endpoint = "/api/loan/repayment";
+        String finalurl = url + endpoint;
+
+        // 파라미터 설정
+        JSONObject requestBody = new JSONObject();
+        try {
+            // fragment_loan_y에서 선택한 대출금액 입력 EditText 찾기
+            EditText repaymentAmountEditText = rootView.findViewById(R.id.repayment_amount);
+            String repaymentAmount = repaymentAmountEditText.getText().toString();
+
+            // fragment_loan_y에서 선택한 account_number 가져오기
+            Spinner accountSpinner = rootView.findViewById(R.id.account_list_spinner_y);
+            String accountNumber = accountSpinner.getSelectedItem().toString();
+
+            // 요청에 필요한 데이터 설정
+            requestBody.put("selected_account", accountNumber);
+            requestBody.put("repayment_amount", repaymentAmount);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // 요청 보내기
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, finalurl, requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // 상환 요청 성공 시 처리
+                        try {
+                            String message = response.getJSONObject("data").getString("message");
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // 대출 요청 실패 시 처리
+                        Toast.makeText(getActivity(), "대출 요청 실패", Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + retrivedToken);
+                return headers;
+            }
+        };
+
+        queue.add(request);
+    }
+
+    // 취소 버튼 함수
+    public void cancel_debt(View rootView) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken = sharedPreferences.getString("accesstoken", null);
+        final RequestQueue queue = Volley.newRequestQueue(getActivity());
+        sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
+        final String url = sharedPreferences.getString("apiurl", null);
+        String endpoint = "/api/loan/loan_cancel";
+        String finalurl = url + endpoint;
+
+        // 파라미터 설정
+        JSONObject requestBody = new JSONObject();
+        try {
+            // fragment_loan_n에서 선택한 account_number 가져오기
+            Spinner accountSpinner = rootView.findViewById(R.id.account_list_spinner_y);
+            String accountNumber = accountSpinner.getSelectedItem().toString();
+
+            // 요청에 필요한 데이터 설정
+            requestBody.put("selected_account", accountNumber);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // 요청 보내기
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, finalurl, requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // 대출 요청 성공 시 처리
+                        try {
+                            String message = response.getJSONObject("data").getString("message");
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
