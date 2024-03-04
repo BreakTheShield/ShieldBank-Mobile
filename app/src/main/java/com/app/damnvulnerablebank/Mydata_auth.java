@@ -51,6 +51,7 @@ import okhttp3.RequestBody;
 public class Mydata_auth extends AppCompatActivity {
 
     Button send;
+    Button sendCancel;
     TextView tt;
 
     private JSONArray dataArray;
@@ -119,8 +120,16 @@ public class Mydata_auth extends AppCompatActivity {
         });
         setContentView(R.layout.activity_mydata_auth);
         send = findViewById(R.id.buttonOk);
+        sendCancel = findViewById(R.id.buttonCancel);
 
         send.setOnClickListener(v -> mydata_auth());
+        sendCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 클릭 시 특정 activity로 이동하는 코드 작성
+                finish();
+            }
+        });
     }
 
     private void useusername(String username){

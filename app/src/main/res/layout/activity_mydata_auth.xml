@@ -5,13 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
+    android:background="#F3E3F3"
     tools:context=".Mydata_auth">
+
     <!-- 설명 텍스트 -->
     <TextView
         android:id="@+id/textViewDescription"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="인증번호를 입력해주세요"
+        android:gravity="center"
+        android:text="인증번호(4자리 숫자)가 문자로 전송되었습니다 !\n인증번호를 아래에 입력해주세요"
+        android:fontFamily="@font/muli_extrabold"
         android:textSize="16sp"
         android:textColor="@android:color/black"
         android:layout_marginBottom="16dp"/>
@@ -23,33 +28,34 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:hint="인증번호를 입력하세요"
-        android:layout_below="@id/textViewDescription"
+        android:gravity="center"
+        android:fontFamily="@font/muli_extrabold"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
         android:layout_marginBottom="16dp"/>
 
     <!-- 버튼 레이아웃 -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
-
-        <!-- 취소 버튼 -->
+        android:orientation="horizontal">
 
         <!-- 확인 버튼 -->
         <Button
             android:id="@+id/buttonOk"
-            android:layout_width="0dp"
+            android:fontFamily="@font/muli_extrabold"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="확인"/>
 
+        <!-- 취소 버튼 -->
         <Button
             android:id="@+id/buttonCancel"
-            android:layout_width="0dp"
+            android:fontFamily="@font/muli_extrabold"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="취소" />
+            android:text="취소"
+            android:layout_marginLeft="16dp" />
     </LinearLayout>
 
 </LinearLayout>
-
