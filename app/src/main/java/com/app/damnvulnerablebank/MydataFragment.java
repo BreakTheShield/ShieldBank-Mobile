@@ -139,7 +139,9 @@ public class MydataFragment extends Fragment {
         if (requestCode == 1) { // 1은 startActivityForResult()에서 사용한 요청 코드입니다.
             if (resultCode == Activity.RESULT_OK) {
                 // 활동이 성공적으로 반환된 경우
-                reqAccounts();
+                Intent intent = new Intent(getActivity(), Mydata_send.class);
+                startActivity(intent);
+                //reqAccounts();
             }
         }
     }

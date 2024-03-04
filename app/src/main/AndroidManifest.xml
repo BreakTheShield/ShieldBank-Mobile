@@ -49,6 +49,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Mydata_auth" />
+        <activity android:name=".Mydata_send" />
         <activity android:name=".ResetPassword" />
         <activity android:name=".ViewBeneficiary" />
         <activity android:name=".ApproveBeneficiary" />
