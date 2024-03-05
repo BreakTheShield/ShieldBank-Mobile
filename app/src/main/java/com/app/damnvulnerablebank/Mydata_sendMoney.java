@@ -15,8 +15,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,7 @@ public class Mydata_sendMoney extends AppCompatActivity {
     Date currentDate = new Date();
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,18 +57,28 @@ public class Mydata_sendMoney extends AppCompatActivity {
         Intent i = getIntent();
         String accountNumber = i.getStringExtra("account_number");
         tt.setText(accountNumber);
-        Log.d("123", "213123123123" + accountNumber);
+        tt.setFocusable(false);  // 포커스 받지 않도록 설정
+        tt.setClickable(false);  // 클릭 불가능하도록 설정
+        tt.setCursorVisible(false);  // 커서 숨기기 (있는 경우)
+
+        Spinner spinnerBank = findViewById(R.id.spinnerBank);
+
+        // Spinner에 선택 옵션 추가
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.bank_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerBank.setAdapter(adapter);
+
         send = findViewById(R.id.sendbutton);
         send.setOnClickListener(v -> sendMoney());
+
     }
 
     public void sendMoney() {
-        EditText ed3 = findViewById(R.id.edact3);
+        int to_bankcode = getSelectedBankCode();
         EditText ed2 = findViewById(R.id.edact2);     // 수취계좌
         EditText ed4 = findViewById(R.id.edamt);    // 이체금액
-        Log.d("12", "인트인트인트인트" + Integer.parseInt(ed3.getText().toString()));
 
-        if (Integer.parseInt(ed3.getText().toString()) == 555) {
+        if (to_bankcode == 555) {
             SharedPreferences sharedPreferences = getSharedPreferences("jwt", Context.MODE_PRIVATE);
             final String retrivedToken = sharedPreferences.getString("accesstoken", null);
             SharedPreferences sharedPreferences1 = getSharedPreferences("apiurl", Context.MODE_PRIVATE);
@@ -76,7 +89,6 @@ public class Mydata_sendMoney extends AppCompatActivity {
             //EditText ed = findViewById(R.id.edact);     // 송금계좌
             int from_bankcode = 0;
             int from_account = 0;
-            int to_bankcode = 0;
             int to_account = 0;
             int amount = 0;
             String sendtime = dateFormat.format(currentDate);
@@ -89,7 +101,6 @@ public class Mydata_sendMoney extends AppCompatActivity {
                 if (!ed2.getText().toString().isEmpty() && !ed4.getText().toString().isEmpty()) {
                     from_bankcode = 333;
                     from_account = Integer.parseInt(tt.getText().toString());
-                    to_bankcode = Integer.parseInt(ed3.getText().toString());
                     to_account = Integer.parseInt(ed2.getText().toString());
                     amount = Integer.parseInt(ed4.getText().toString());
                 } else {
@@ -155,7 +166,6 @@ public class Mydata_sendMoney extends AppCompatActivity {
             //EditText ed = findViewById(R.id.edact);     // 송금계좌
             int from_bankcode = 0;
             int from_account = 0;
-            int to_bankcode = 0;
             int to_account = 0;
             int amount = 0;
             String sendtime = dateFormat.format(currentDate);
@@ -168,7 +178,6 @@ public class Mydata_sendMoney extends AppCompatActivity {
                 if (!ed2.getText().toString().isEmpty() && !ed4.getText().toString().isEmpty()) {
                     from_bankcode = 333;
                     from_account = Integer.parseInt(tt.getText().toString());
-                    to_bankcode = Integer.parseInt(ed3.getText().toString());
                     to_account = Integer.parseInt(ed2.getText().toString());
                     amount = Integer.parseInt(ed4.getText().toString());
                 } else {
@@ -225,5 +234,29 @@ public class Mydata_sendMoney extends AppCompatActivity {
 
     }
 
+    private int getSelectedBankCode() {
+        Spinner spinnerBank = findViewById(R.id.spinnerBank);
 
+        // 선택된 은행의 위치(index)를 가져옴
+        int selectedPosition = spinnerBank.getSelectedItemPosition();
+
+        // 선택된 은행 옵션의 배열에서 해당 위치의 문자열을 가져옴
+        String[] bankOptions = getResources().getStringArray(R.array.bank_options);
+        String selectedBank = bankOptions[selectedPosition];
+
+        // 선택된 은행에 따라 코드를 할당하거나 다른 처리를 수행
+        int to_bankcode = 0;
+        if ("쉴드은행".equals(selectedBank)) {
+            to_bankcode = 555; // 예시 코드, 실제 은행 코드에 따라 수정
+        } else if ("소드은행".equals(selectedBank)) {
+            to_bankcode = 333; // 예시 코드, 실제 은행 코드에 따라 수정
+        }
+        // 다른 은행에 대한 처리도 추가 가능
+
+        return to_bankcode;
+    }
+
+    // ... (나머지 코드)
 }
+
+

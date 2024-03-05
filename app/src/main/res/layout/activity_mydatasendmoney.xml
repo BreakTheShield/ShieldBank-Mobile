@@ -39,15 +39,13 @@
         android:textSize="15sp"
         android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/edact3"
+    <Spinner
+        android:id="@+id/spinnerBank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/actid"
         android:layout_gravity="center"
-        android:layout_marginTop="0dp"
-        android:hint="입금할 은행을 입력해주세요"
-        android:inputType="numberDecimal"
+        android:layout_marginTop="10dp"
         android:textSize="15sp"
         android:textStyle="bold" />
 
