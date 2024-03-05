@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,11 @@ public class MydataAccountAdapter extends RecyclerView.Adapter<MydataAccountAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (position < MyBankAccounts.size()) {
             final BankAccount account = MyBankAccounts.get(position);
-            holder.textviewmoney.setText(String.valueOf(account.getBalance()));
+            // DecimalFormat 객체를 생성합니다.
+            DecimalFormat formatter = new DecimalFormat("#,###");
+            // 포맷을 적용하여 숫자를 문자열로 변환합니다.
+            String formattedNumber = formatter.format(account.getBalance());
+            holder.textviewmoney.setText(formattedNumber);
             holder.textviewbankno.setText(String.valueOf(account.getAccount_number()));
             holder.textviewcode.setText(String.valueOf(account.getBank_code()));
 

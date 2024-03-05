@@ -376,6 +376,15 @@ public class AccountListFragment extends Fragment {
                         }
                     }
                 });
+                Toast.makeText(getActivity().getApplicationContext(), "계좌가 생성되었습니다.", Toast.LENGTH_SHORT).show();
+
+                try {
+                    Thread.sleep(700); // 1000 밀리초 = 1초
+                    total();
+                    // 1초 후에 실행될 코드 작성
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

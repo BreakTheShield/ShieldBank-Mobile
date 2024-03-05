@@ -197,7 +197,11 @@ public class LoanFragment extends Fragment {
                     // Set loan amount to TextView
                     TextView debtBalanceTextView = loanYView.findViewById(R.id.debt_amount_text_view);
                     if (loanAmountArray.length() > 0) {
-                        debtBalanceTextView.setText("대출 잔액: " + loanAmountArray.getInt(0));
+                        // DecimalFormat 객체를 생성합니다.
+                        DecimalFormat formatter = new DecimalFormat("#,###");
+                        // 포맷을 적용하여 숫자를 문자열로 변환합니다.
+                        String formattedNumber = formatter.format(loanAmountArray.getInt(0));
+                        debtBalanceTextView.setText("대출 잔액: " + formattedNumber);
                     }
 
                     // 상환버튼

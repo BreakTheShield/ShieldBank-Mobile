@@ -37,12 +37,13 @@ public class MyBankAccountAdapter extends RecyclerView.Adapter<MyBankAccountAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // DecimalFormat 객체를 생성합니다.
-        DecimalFormat formatter = new DecimalFormat("#,###");
+
 
 
         if (position < MyBankAccounts.size()) {
             final BankAccount account = MyBankAccounts.get(position);
+            // DecimalFormat 객체를 생성합니다.
+            DecimalFormat formatter = new DecimalFormat("#,###");
             // 포맷을 적용하여 숫자를 문자열로 변환합니다.
             String formattedNumber = formatter.format(account.getBalance());
 
