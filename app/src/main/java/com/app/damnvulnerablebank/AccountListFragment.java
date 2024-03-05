@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,10 +55,11 @@ import okhttp3.*;
 public class AccountListFragment extends Fragment {
     private JSONArray dataArray;
 
-    LinearLayout linear_layout_request_money,linear_layout_send_money;
+    LinearLayout linear_layout_send_money;
     ImageView add_bank_account;
     RecyclerView recyclerViewbankaccount;
     TextView text_view_name, date,text_view_total_money, text_view_code;
+    Button send_btn;
 
     @Nullable
     @Override
@@ -120,6 +122,8 @@ public class AccountListFragment extends Fragment {
         setDate();
         click();
         fetchAccountData();
+
+
 
     }
 
@@ -189,9 +193,9 @@ public class AccountListFragment extends Fragment {
         date = getView().findViewById(R.id.text_view_date_main);
         recyclerViewbankaccount = getView().findViewById(R.id.recyclerview_bank_account);
         add_bank_account = getView().findViewById(R.id.image_view_add_bank_account);
-        linear_layout_request_money = getView().findViewById(R.id.linear_layout_request_money);
         text_view_total_money = getView().findViewById(R.id.text_view_total_money);
         linear_layout_send_money = getView().findViewById(R.id.linear_layout_send_money);
+        send_btn = getView().findViewById(R.id.send_btn);
         text_view_code = getView().findViewById(R.id.text_view_bank_code);
     }
 
@@ -265,8 +269,7 @@ public class AccountListFragment extends Fragment {
             }
         });
 
-        // "linear_layout_send_money" 버튼 클릭 이벤트 처리 코드
-        linear_layout_send_money.setOnClickListener(new View.OnClickListener() {
+        send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // "linear_layout_send_money" 버튼 클릭 시 실행할 코드
@@ -276,6 +279,7 @@ public class AccountListFragment extends Fragment {
                 startActivityForResult(intent, 1);
             }
         });
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

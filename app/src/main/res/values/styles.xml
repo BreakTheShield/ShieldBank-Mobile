@@ -12,4 +12,7 @@
         <item name="android:textSize">16sp</item>
         <!-- 기타 버튼 스타일 속성들을 필요에 따라 추가하세요 -->
     </style>
+    <style name="MyToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">#FFFFFF</item>
+    </style>
 </resources>

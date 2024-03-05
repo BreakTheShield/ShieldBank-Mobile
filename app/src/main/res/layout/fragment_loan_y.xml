@@ -19,23 +19,21 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/purple"
+                android:layout_height="65dp"
                 android:gravity="bottom|start"
                 android:paddingHorizontal="30dp"
                 android:text="보안을 위해 일하는 국민 누구나!"
-                android:textColor="@color/whiteTextColor"
-                android:textSize="11sp" />
+                android:textColor="@color/black"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_loan_y"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@color/purple"
+                android:layout_height="60dp"
                 android:gravity="start"
                 android:paddingHorizontal="30dp"
                 android:text="Security 우대대출"
-                android:textColor="@color/whiteTextColor"
+                android:textColor="@color/black"
                 android:textSize="35sp"
                 android:textStyle="bold" />
 
@@ -92,10 +90,11 @@
 
             <Spinner
                 android:id="@+id/account_list_spinner_y"
+                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_horizontal" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/spinner_border" />
 
             <TextView
                 android:id="@+id/debt_amount_text_view"
@@ -103,6 +102,7 @@
                 android:layout_height="30dp"
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
+                android:textSize="16sp"
                 android:text="대출 잔액:" />
 
             <EditText
@@ -120,13 +120,23 @@
 
                 <Button
                     android:id="@+id/repayment_debt_button"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    style="@style/AppButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="대출 상환" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.1"/>
 
                 <Button
                     android:id="@+id/cancel_debt_button"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    style="@style/AppButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

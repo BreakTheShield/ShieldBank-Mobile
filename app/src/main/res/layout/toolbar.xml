@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/purple_200"
         app:menu="@menu/toolbar_menu"
+        android:theme="@style/MyToolbarTheme"
         app:title="@string/app_name"
         app:titleTextColor="@color/white">
 

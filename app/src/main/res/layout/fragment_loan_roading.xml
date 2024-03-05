@@ -18,14 +18,12 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/purple" />
+                android:layout_height="80dp" />
 
             <TextView
                 android:id="@+id/tv_loan_n"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@color/purple" />
+                android:layout_height="100dp" />
 
             <ProgressBar
                 android:id="@+id/progressBar2"

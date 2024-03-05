@@ -45,6 +45,7 @@
             android:id="@+id/buttonOk"
             android:fontFamily="@font/muli_extrabold"
             android:layout_width="wrap_content"
+            style="@style/AppButton"
             android:layout_height="wrap_content"
             android:text="확인"/>
 
@@ -54,6 +55,7 @@
             android:fontFamily="@font/muli_extrabold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/AppButton"
             android:text="취소"
             android:layout_marginLeft="16dp" />
     </LinearLayout>

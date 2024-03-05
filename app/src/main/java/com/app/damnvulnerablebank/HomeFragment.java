@@ -1,19 +1,24 @@
 package com.app.damnvulnerablebank;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,8 +53,10 @@ public class HomeFragment extends Fragment {
     List<QnAListRecords> qRecords = new ArrayList<>();
     Nadapter nadapter;
     Qadapter qadapter;
-
-
+    LinearLayout ll_notice;
+    LinearLayout ll_qna;
+    LinearLayout ll_mydata;
+    LinearLayout ll_loan;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +66,7 @@ public class HomeFragment extends Fragment {
         tv_balance = homeView.findViewById(R.id.textview_balance);
         tv_user    = homeView.findViewById(R.id.tv_home_username);
 
+
         recyclerView_notice = homeView.findViewById(R.id.announcelist); // Assuming the RecyclerView ID is 'recycler_view' in your layout
         recyclerView_notice.setLayoutManager(new LinearLayoutManager(getActivity()));
         viewNoticeList();
@@ -65,6 +74,66 @@ public class HomeFragment extends Fragment {
         recyclerView_qna = homeView.findViewById(R.id.qnalist); // Assuming the RecyclerView ID is 'recycler_view' in your layout
         recyclerView_qna.setLayoutManager(new LinearLayoutManager(getActivity()));
         viewQnAList();
+
+        ll_notice = homeView.findViewById(R.id.ll_notice);
+        ll_qna = homeView.findViewById(R.id.ll_qna);
+        ll_mydata = homeView.findViewById(R.id.ll_mydata);
+        ll_loan = homeView.findViewById(R.id.ll_loan);
+        ll_notice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), NoticeListView.class);
+                startActivity(intent);
+            }
+        });
+
+        ll_qna.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), QnAListView.class);
+                startActivity(intent);
+            }
+        });
+
+        ll_mydata.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_bar);
+                MydataFragment newFragment = new MydataFragment();
+
+                // FragmentManager를 사용하여 트랜잭션 시작
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // 프래그먼트를 교체하고 트랜잭션을 백스택에 추가 (선택 사항)
+                transaction.replace(R.id.tabs_layout, newFragment);
+                transaction.addToBackStack(null);
+                bottomNavigationView.getMenu().findItem(R.id.tab_mydata).setChecked(true);
+                // 트랜잭션 커밋
+                transaction.commit();
+            }
+        });
+
+        ll_loan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_bar);
+                LoanFragment newFragment = new LoanFragment();
+
+                // FragmentManager를 사용하여 트랜잭션 시작
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // 프래그먼트를 교체하고 트랜잭션을 백스택에 추가 (선택 사항)
+                transaction.replace(R.id.tabs_layout, newFragment);
+                transaction.addToBackStack(null);
+                bottomNavigationView.getMenu().findItem(R.id.tab_loan).setChecked(true);
+                // 트랜잭션 커밋
+                transaction.commit();
+            }
+        });
+
+
 
         onDestroy();
 

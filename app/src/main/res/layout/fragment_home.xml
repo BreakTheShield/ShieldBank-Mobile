@@ -90,7 +90,9 @@
         app:cardUseCompatPadding="true"
         app:cardElevation="3dp"
         app:cardCornerRadius="25dp">
+
         <LinearLayout
+            android:id="@+id/ll_mydata"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="17dp"
@@ -105,14 +107,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="23sp"
+                    android:textSize="22sp"
                     android:text="통합조회" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textAlignment="textEnd"
+                    android:gravity="center|right"
                     android:textSize="16sp"
                     android:text="마이데이터를 이용해보세요  >" />
 
@@ -133,6 +134,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <LinearLayout
+                android:id="@+id/ll_loan"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -142,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="25sp"
+                    android:textSize="22sp"
                     android:text="대출" />
 
                 <TextView
@@ -180,7 +182,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:layout_margin="15dp"
                     android:text="마이메뉴" />
 
@@ -193,14 +195,15 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/ll_notice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="45dp"
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageView
-                            android:layout_width="59dp"
-                            android:layout_height="59dp"
+                            android:layout_width="61dp"
+                            android:layout_height="61dp"
                             android:background="@drawable/announce" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -210,14 +213,15 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_qna"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="45dp"
                         android:layout_gravity="center"
                         android:orientation="vertical">
                         <ImageView
-                            android:layout_width="59dp"
-                            android:layout_height="59dp"
+                            android:layout_width="61dp"
+                            android:layout_height="61dp"
                             android:background="@drawable/qna" />
                         <TextView
                             android:layout_width="wrap_content"

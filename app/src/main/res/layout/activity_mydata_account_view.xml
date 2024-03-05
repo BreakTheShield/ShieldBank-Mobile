@@ -1,70 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/white">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="40dp"
+        android:background="@color/purple_200"
         app:titleTextColor="@android:color/white"
-        app:navigationIcon="?android:attr/homeAsUpIndicator"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:navigationIcon="?android:attr/homeAsUpIndicator" />
+
 
     <LinearLayout
-        android:id="@+id/layout_functions_main_screen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/user1_corner_rounded"
-        android:padding="5dp"
-        tools:ignore="MissingConstraints" />
-
-    <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/layout_functions_main_screen"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
+        android:layout_marginTop="11dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_margin="5dp"
-            android:background="@drawable/frame"
-
+            android:background="@drawable/spinner_border"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1">
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
+                android:orientation="horizontal">
                 <TextView
-
                     android:layout_weight="1.0"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="20dp"
                     android:id="@+id/text_view_portfolio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MYDATA ACCOUNTS"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textSize="22dp"></TextView>
-
-
-
-
-
+                    android:textSize="21sp" />
             </LinearLayout>
 
 
@@ -72,8 +52,7 @@
                 android:id="@+id/recyclerview_bank_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:layout_editor_absoluteX="150dp"
-                tools:layout_editor_absoluteY="200dp" />
+                android:layout_margin="7dp"/>
 
         </LinearLayout>
 
@@ -82,4 +61,4 @@
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

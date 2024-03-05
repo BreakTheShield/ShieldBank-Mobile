@@ -129,13 +129,12 @@
             android:id="@+id/reset"
             android:layout_width="290dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/share_round_popup"
+            style="@style/AppButton"
             android:layout_marginTop="30dp"
             android:text="비밀번호 변경"
             android:onClick="resetPassword"
             android:layout_gravity="center"
-            android:textStyle="bold"
-            android:textColor="#000000"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 </ScrollView>
