@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,10 +67,119 @@ public class AccountListFragment extends Fragment {
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         fetchAccountData();
+        total();
         return inflater.inflate(R.layout.fragment_account_list, container, false);
     }
 
 
+    public void total(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken  = sharedPreferences.getString("accesstoken",null);
+        final RequestQueue queue = Volley.newRequestQueue(getActivity());
+        sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
+        final String url  = sharedPreferences.getString("apiurl",null);
+        String endpoint="/api/balance/total";
+        String finalurl = url+endpoint;
+
+
+        final JsonObjectRequest stringRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, finalurl,null,
+                new com.android.volley.Response.Listener<JSONObject>()  {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
+
+                            // Check for error message
+                            if(decryptedResponse.getJSONObject("status").getInt("code") != 200) {
+                                Toast.makeText(getActivity().getApplicationContext(), "Error: " + decryptedResponse.getJSONObject("data").getString("message"), Toast.LENGTH_SHORT).show();
+                                return;
+                                // This is buggy. Need to call Login activity again if incorrect credentials are given
+                            }
+
+                            JSONArray dataArray = decryptedResponse.getJSONArray("data");
+                            JSONObject obj = dataArray.getJSONObject(0);
+                            String balance=obj.getString("total_balance");
+
+                            // balance를 숫자로 변환
+                            double balanceValue = Double.parseDouble(balance);
+                            // 숫자를 1000단위로 쉼표로 나누기 위한 포맷 지정
+                            DecimalFormat formatter = new DecimalFormat("#,###");
+                            // 포맷을 적용하여 문자열로 변환
+                            String formattedBalance = formatter.format(balanceValue);
+
+
+                            text_view_total_money.setText(formattedBalance);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers=new HashMap();
+                headers.put("Authorization","Bearer "+retrivedToken);
+                return headers;
+            }
+
+
+        };
+
+        queue.add(stringRequest);
+        queue.getCache().clear();
+    }
+
+    public void username(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
+        final String retrivedToken  = sharedPreferences.getString("accesstoken",null);
+        final RequestQueue queue = Volley.newRequestQueue(getActivity());
+        sharedPreferences = getActivity().getSharedPreferences("apiurl", Context.MODE_PRIVATE);
+        final String url  = sharedPreferences.getString("apiurl",null);
+        String endpoint="/api/user/profile";
+        String finalurl = url+endpoint;
+        final JsonObjectRequest stringRequest2 = new JsonObjectRequest(com.android.volley.Request.Method.POST, finalurl,null,
+                new com.android.volley.Response.Listener<JSONObject>()  {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
+
+                            // Check for error message
+                            if(decryptedResponse.getJSONObject("status").getInt("code") != 200) {
+                                Toast.makeText(getActivity().getApplicationContext(), "Error: " + decryptedResponse.getJSONObject("data").getString("message"), Toast.LENGTH_SHORT).show();
+                                return;
+                                // This is buggy. Need to call Login activity again if incorrect credentials are given
+                            }
+
+                            JSONObject obj = decryptedResponse.getJSONObject("data");
+                            String username = obj.getString("username");
+
+                            text_view_name.setText("HELLO  "+username);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers=new HashMap();
+                headers.put("Authorization","Bearer "+retrivedToken);
+                return headers;
+            }
+        };
+        queue.add(stringRequest2);
+        queue.getCache().clear();
+    }
 
     private void updateRecyclerView(JSONArray dataArray) {
         getActivity().runOnUiThread(new Runnable() {

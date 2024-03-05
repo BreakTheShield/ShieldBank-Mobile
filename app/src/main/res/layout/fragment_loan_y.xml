@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/spinner_border" />
+                android:background="@drawable/spinner_border2" />
 
             <TextView
                 android:id="@+id/debt_amount_text_view"

@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3E3F3"
+    android:background="#FFFFFF"
     android:padding="30dp"
     tools:context=".MainActivity">
 
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@drawable/share_round_popup"
+                style="@style/AppButton"
                 android:onClick="loginPage"
                 android:text="Login" />
 
@@ -47,7 +47,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/share_round_popup"
+                style="@style/AppButton"
                 android:onClick="signupPage"
                 android:text="Sign Up" />
 
@@ -73,7 +73,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
-            android:background="@drawable/share_round_popup"
+            style="@style/AppButton"
             android:onClick="healthCheck"
             android:text="Health Check" />
 
