@@ -65,10 +65,10 @@ public class BankMainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
 
 
-        if(RootUtil.isDeviceRooted()) {
-            Toast.makeText(getApplicationContext(), "Phone is Rooted", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+//        if(RootUtil.isDeviceRooted()) {
+//            Toast.makeText(getApplicationContext(), "Phone is Rooted", Toast.LENGTH_SHORT).show();
+//            finish();
+//        }
     }
 
     // 메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
