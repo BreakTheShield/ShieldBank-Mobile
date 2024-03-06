@@ -3,6 +3,7 @@ package com.app.damnvulnerablebank;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
@@ -59,6 +60,9 @@ public class Mydata_auth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         OkHttpClient client2 = new OkHttpClient();
         EncryptDecrypt endecryptor2 = new EncryptDecrypt();
         SharedPreferences sharedPreferences = Mydata_auth.this.getSharedPreferences("jwt", Context.MODE_PRIVATE);
@@ -130,6 +134,10 @@ public class Mydata_auth extends AppCompatActivity {
                 finish();
             }
         });
+
+
+
+
     }
 
     private void useusername(String username){

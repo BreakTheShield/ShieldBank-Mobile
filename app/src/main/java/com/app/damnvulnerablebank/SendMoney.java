@@ -3,6 +3,7 @@ package com.app.damnvulnerablebank;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
@@ -50,6 +51,12 @@ public class SendMoney extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendmoney);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        // 툴바에 뒤로가기 버튼 표시
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         tt = findViewById(R.id.actid);
         Intent i = getIntent();
         String p = i.getStringExtra(beneficiary_account_number);

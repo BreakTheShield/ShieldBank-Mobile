@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/purple_200"
-        app:titleTextColor="@android:color/white"
-        app:navigationIcon="?android:attr/homeAsUpIndicator" />
+        app:titleTextColor="@android:color/white" />
 
 
     <LinearLayout
