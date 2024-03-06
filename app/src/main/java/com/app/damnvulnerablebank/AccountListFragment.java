@@ -66,9 +66,22 @@ public class AccountListFragment extends Fragment {
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        // 레이아웃만 인플레이트하고 실제 데이터는 onViewCreated() 메서드에서 처리
+        return inflater.inflate(R.layout.fragment_account_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // 데이터 가져오기 및 UI 업데이트
         fetchAccountData();
         total();
-        return inflater.inflate(R.layout.fragment_account_list, container, false);
+        username();
+        // 나머지 작업 수행
+        define();
+        setDate();
+        click();
     }
 
 
@@ -81,14 +94,12 @@ public class AccountListFragment extends Fragment {
         String endpoint="/api/balance/total";
         String finalurl = url+endpoint;
 
-
         final JsonObjectRequest stringRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, finalurl,null,
                 new com.android.volley.Response.Listener<JSONObject>()  {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
-
                             // Check for error message
                             if(decryptedResponse.getJSONObject("status").getInt("code") != 200) {
                                 Toast.makeText(getActivity().getApplicationContext(), "Error: " + decryptedResponse.getJSONObject("data").getString("message"), Toast.LENGTH_SHORT).show();
@@ -116,7 +127,7 @@ public class AccountListFragment extends Fragment {
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.d("sss", String.valueOf(error));
             }
         }){
             @Override
@@ -146,7 +157,7 @@ public class AccountListFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-
+                            Log.d("ddss", String.valueOf(response));
                             JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
 
                             // Check for error message
@@ -224,18 +235,6 @@ public class AccountListFragment extends Fragment {
         return bankAccounts;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        define();
-        setDate();
-        click();
-        fetchAccountData();
-
-
-
-    }
 
     private void fetchAccountData() {
         OkHttpClient client = new OkHttpClient();

@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -43,12 +46,24 @@ public class QnAView extends AppCompatActivity {
     Button delete;
     Button comment;
     private String username;
-
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // 뒤로가기 버튼이 눌렸을 때의 동작 추가
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qna_view);
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        // 툴바에 뒤로가기 버튼 표시
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tv_title = findViewById(R.id.qv_title);
         tv_userId = findViewById(R.id.qv_userId);
         tv_createdAt = findViewById(R.id.qv_createdAt);
