@@ -54,6 +54,7 @@ import org.json.JSONObject;
 import okhttp3.*;
 
 public class AccountListFragment extends Fragment {
+    private static final int REQUEST_TRANSFER = 123;
     private JSONArray dataArray;
 
     LinearLayout linear_layout_send_money;
@@ -62,11 +63,13 @@ public class AccountListFragment extends Fragment {
     TextView text_view_name, date,text_view_total_money, text_view_code;
     Button send_btn;
 
+
+
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
+        total();
         fetchAccountData();
         // 레이아웃만 인플레이트하고 실제 데이터는 onViewCreated() 메서드에서 처리
         return inflater.inflate(R.layout.fragment_account_list, container, false);
@@ -409,6 +412,7 @@ public class AccountListFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 // 활동이 성공적으로 반환된 경우
                 fetchAccountData();
+                total();
             }
         }
     }

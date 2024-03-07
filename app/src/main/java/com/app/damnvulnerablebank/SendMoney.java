@@ -140,5 +140,6 @@ public class SendMoney extends AppCompatActivity {
         };
 
         requestQueue.add(jsonObjectRequest);
+        requestQueue.getCache().clear();
     }
 }
