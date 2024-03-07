@@ -71,7 +71,7 @@ public class MydataFragment extends Fragment {
         TextView textViewPortfolio = rootView.findViewById(R.id.text_view_portfolio);
         textViewPortfolio.setText(username + "님,\n흩어져있는 내 자산 연결하고 \n한번에 관리하세요");
 
-        String apiUrl2 = "http://59.16.223.162:38888/api/Account/view";
+        String apiUrl2 = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Account/view";
 
         RequestBody requestBody2 = new FormBody.Builder()
                 .add("username", "username")
@@ -169,7 +169,7 @@ public class MydataFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
-        String apiUrl2 = "http://59.16.223.162:38888/api/Mydata/req_account";
+        String apiUrl2 = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Mydata/req_account";
 
         RequestBody requestBody2 = new FormBody.Builder()
 

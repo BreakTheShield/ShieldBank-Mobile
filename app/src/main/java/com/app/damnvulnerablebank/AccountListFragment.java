@@ -66,6 +66,8 @@ public class AccountListFragment extends Fragment {
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        fetchAccountData();
         // 레이아웃만 인플레이트하고 실제 데이터는 onViewCreated() 메서드에서 처리
         return inflater.inflate(R.layout.fragment_account_list, container, false);
     }
@@ -242,7 +244,7 @@ public class AccountListFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken = sharedPreferences.getString("accesstoken", null);
 
-        String apiUrl = "http://59.16.223.162:38888/api/Account/view";
+        String apiUrl = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Account/view";
 
         RequestBody requestBody = new FormBody.Builder()
                 .add("username", "username")
@@ -323,7 +325,7 @@ public class AccountListFragment extends Fragment {
                 final String retrivedToken  = sharedPreferences.getString("accesstoken",null);
 
                 // API 엔드포인트 URL 설정
-                String apiUrl = "http://59.16.223.162:38888/api/Account/create";
+                String apiUrl = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Account/create";
 
                 // 요청 바디에 필요한 데이터 설정 (예: 사용자 정보, 계좌 정보 등)
                 // 아래는 예시일 뿐 실제로는 사용자 입력 등을 통해 값을 동적으로 설정해야 합니다.

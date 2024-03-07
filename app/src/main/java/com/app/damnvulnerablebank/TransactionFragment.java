@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.text.DateFormat;
+
 
 
 import android.util.Log;
@@ -47,13 +49,19 @@ public class TransactionFragment extends Fragment {
     private int selectedYear, selectedMonth, selectedDay;
     private String tripstart;
     private String tripend;
+    private String seoultime;
+    private long now;
+    private Date date;
+
     // 서울시간 현재 시간 구하기
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    long now = System.currentTimeMillis();
-    Date date = new Date(now);
-    String seoultime = sdf.format(date);
 
-
+    public void seoulTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+        now = System.currentTimeMillis();
+        date = new Date(now);
+        seoultime = sdf.format(date);
+    }
 
 
     private void showStartDatePicker(View view) {
@@ -104,11 +112,12 @@ public class TransactionFragment extends Fragment {
         getTransaction(tripstart+" 00:00:00",tripend+" 23:59:59");
     }
 
-//234506, 153145
+    //234506, 153145
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_transaction, container, false);
 
+        seoulTime();
         //버튼에 대한 뷰를 연결
         Button btnSelectStartDate = rootView.findViewById(R.id.btn_select_start_date);
         Button btnSelectEndDate = rootView.findViewById(R.id.btn_select_end_date);
@@ -161,6 +170,7 @@ public class TransactionFragment extends Fragment {
         // JSON 데이터 생성
         JSONObject jsonBody = new JSONObject();
         try {
+
             jsonBody.put("tripstart", start_date);
             jsonBody.put("tripend", end_date);
         } catch (JSONException e) {

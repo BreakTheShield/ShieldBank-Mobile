@@ -74,7 +74,7 @@ public class Mydata_send extends AppCompatActivity {
         SharedPreferences sharedPreferences = Mydata_send.this.getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
-        String apiUrl2 = "http://59.16.223.162:38888/api/Mydata/req_account";
+        String apiUrl2 = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Mydata/req_account";
 
         RequestBody requestBody2 = new FormBody.Builder()
 

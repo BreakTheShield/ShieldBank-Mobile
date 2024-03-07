@@ -68,7 +68,7 @@ public class Mydata_auth extends AppCompatActivity {
         SharedPreferences sharedPreferences = Mydata_auth.this.getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken2  = sharedPreferences.getString("accesstoken",null);
 
-        String apiUrl2 = "http://59.16.223.162:38888/api/Account/view";
+        String apiUrl2 = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Account/view";
 
         RequestBody requestBody2 = new FormBody.Builder()
                 .add("username", "username")
@@ -148,7 +148,7 @@ public class Mydata_auth extends AppCompatActivity {
 
         Log.d("API_RESPONSE", "log start: ");
 
-        String apiUrl2 = "http://59.16.223.162:38888/api/Mydata/mydata_sms";
+        String apiUrl2 = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Mydata/mydata_sms";
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(apiUrl2).newBuilder();
         urlBuilder.addQueryParameter("username", username);
