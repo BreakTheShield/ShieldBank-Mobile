@@ -49,11 +49,21 @@ public class NoticeListView extends AppCompatActivity implements Nadapter.OnItem
 
     private String username;
 
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // 뒤로가기 버튼이 눌렸을 때의 동작 추가
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_noticelistview);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         // 툴바에 뒤로가기 버튼 표시
         setSupportActionBar(toolbar);
@@ -64,18 +74,6 @@ public class NoticeListView extends AppCompatActivity implements Nadapter.OnItem
         admCheck();
         viewNoticeList();
 
-    }
-
-
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // 뒤로가기 버튼이 눌렸을 때의 동작 추가
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     public void searchBtn(View view) {

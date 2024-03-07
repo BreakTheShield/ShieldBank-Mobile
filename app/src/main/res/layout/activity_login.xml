@@ -59,11 +59,11 @@
                 android:layout_below="@id/login_back"
                 android:hint="아이디를 입력해주세요"
                 android:textColorHint="#FFFFFF"
-                app:boxStrokeColor="#000000"
+                app:boxStrokeColor="#FFFFFF"
                 app:boxStrokeWidthFocused="2dp"
                 app:endIconMode="clear_text"
-                app:endIconTint="#000000"
-                app:hintTextColor="#000000"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#FFFFFF"
                 app:startIconDrawable="@drawable/ic_username_24"
                 app:startIconTint="#FFFFFF">
 
@@ -106,11 +106,11 @@
                 android:layout_below="@id/login_back"
                 android:hint="패스워드를 입력해주세요"
                 android:textColorHint="#FFFFFF"
-                app:boxStrokeColor="#000000"
+                app:boxStrokeColor="#FFFFFF"
                 app:boxStrokeWidthFocused="2dp"
                 app:endIconMode="clear_text"
-                app:endIconTint="#000000"
-                app:hintTextColor="#000000"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#FFFFFF"
                 app:startIconDrawable="@android:drawable/ic_lock_lock"
                 app:startIconTint="#FFFFFF">
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EED9F6"
+    android:background="#FFFFFF"
     android:padding="30dp"
     tools:context=".RegisterBank">
 
@@ -41,7 +41,7 @@
                 android:text="회원가입"
                 android:textAllCaps="true"
                 android:textColor="#000000"
-                android:textSize="33sp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -57,23 +57,23 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/signup_back"
                 android:hint="사용자명을 입력해주세요"
-                android:textColorHint="#000000"
-                app:boxStrokeColor="#000000"
+                android:textColorHint="#FFFFFF"
+                app:boxStrokeColor="#FFFFFF"
                 app:boxStrokeWidthFocused="2dp"
                 app:endIconMode="clear_text"
-                app:endIconTint="#000000"
-                app:hintTextColor="#000000"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#FFFFFF"
                 app:startIconDrawable="@drawable/ic_person_add_24"
-                app:startIconTint="#000000">
+                app:startIconTint="#FFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signup_username_editText"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:background="@drawable/input_white"
+                    android:background="@color/purple_200"
                     android:fontFamily="@font/muli_extrabold"
                     android:inputType="text"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:textCursorDrawable="@null" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -86,23 +86,23 @@
                 android:layout_below="@id/signup_back"
                 android:layout_marginTop="10dp"
                 android:hint="비밀번호를 입력해주세요"
-                android:textColorHint="#000000"
-                app:boxStrokeColor="#000000"
+                android:textColorHint="#FFFFFF"
+                app:boxStrokeColor="#FFFFFF"
                 app:boxStrokeWidthFocused="2dp"
                 app:endIconMode="clear_text"
-                app:endIconTint="#000000"
-                app:hintTextColor="#000000"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#FFFFFF"
                 app:startIconDrawable="@android:drawable/ic_lock_lock"
-                app:startIconTint="#000000">
+                app:startIconTint="#FFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signup_password_editText"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:background="@drawable/input_white"
+                    android:background="@color/purple_200"
                     android:fontFamily="@font/muli_extrabold"
                     android:inputType="textPassword"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:textCursorDrawable="@null" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -115,23 +115,23 @@
                 android:layout_below="@id/signup_back"
                 android:layout_marginTop="10dp"
                 android:hint="이메일을 입력해주세요"
-                android:textColorHint="#000000"
-                app:boxStrokeColor="#000000"
+                android:textColorHint="#FFFFFF"
+                app:boxStrokeColor="#FFFFFF"
                 app:boxStrokeWidthFocused="2dp"
                 app:endIconMode="clear_text"
-                app:endIconTint="#000000"
-                app:hintTextColor="#000000"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#FFFFFF"
                 app:startIconDrawable="@android:drawable/ic_dialog_email"
-                app:startIconTint="#000000">
+                app:startIconTint="#FFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signup_email_editText"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:background="@drawable/input_white"
+                    android:background="@color/purple_200"
                     android:fontFamily="@font/muli_extrabold"
                     android:inputType="textEmailAddress"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:textCursorDrawable="@null" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -144,23 +144,23 @@
                 android:layout_below="@id/signup_email"
                 android:layout_marginTop="10dp"
                 android:hint="전화번호를 입력해주세요('-'제외)"
-                android:textColorHint="#000000"
-                app:boxStrokeColor="#000000"
+                android:textColorHint="#FFFFFF"
+                app:boxStrokeColor="#FFFFFF"
                 app:boxStrokeWidthFocused="2dp"
                 app:endIconMode="clear_text"
-                app:endIconTint="#000000"
-                app:hintTextColor="#000000"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#FFFFFF"
                 app:startIconDrawable="@drawable/baseline_add_ic_call_24"
-                app:startIconTint="#000000">
+                app:startIconTint="#FFFFFF">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signup_phone_editText"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:background="@drawable/input_white"
+                    android:background="@color/purple_200"
                     android:fontFamily="@font/muli_extrabold"
                     android:inputType="textEmailAddress"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:textCursorDrawable="@null" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -174,7 +174,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="27dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/circle"
+            style="@style/AppButton"
             android:onClick="register"
             android:text="회원가입"
             android:textColor="#FFFFFF"

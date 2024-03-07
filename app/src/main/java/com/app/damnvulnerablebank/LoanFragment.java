@@ -165,6 +165,12 @@ public class LoanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_loan_roading, container, false);
 
+        try {
+            Thread.sleep(400);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         Loan(new LoanCallback() {
             @Override
@@ -211,6 +217,7 @@ public class LoanFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             repayment_debt(rootView);
+                            Toast.makeText(getActivity().getApplicationContext(), "상환되었습니다.", Toast.LENGTH_SHORT).show();
                             openLoanFragment();
                         }
                     });
@@ -222,6 +229,7 @@ public class LoanFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             cancel_debt(rootView);
+                            Toast.makeText(getActivity().getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
                             openLoanFragment();
                         }
                     });
@@ -249,6 +257,7 @@ public class LoanFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             get_debt(rootView);
+                            Toast.makeText(getActivity().getApplicationContext(), "대출이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                             openLoanFragment();
                         }
                     });

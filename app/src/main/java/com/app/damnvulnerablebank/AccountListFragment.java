@@ -66,24 +66,9 @@ public class AccountListFragment extends Fragment {
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-        fetchAccountData();
-        // 레이아웃만 인플레이트하고 실제 데이터는 onViewCreated() 메서드에서 처리
-        return inflater.inflate(R.layout.fragment_account_list, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // 데이터 가져오기 및 UI 업데이트
         fetchAccountData();
         total();
-        username();
-        // 나머지 작업 수행
-        define();
-        setDate();
-        click();
+        return inflater.inflate(R.layout.fragment_account_list, container, false);
     }
 
 
@@ -96,12 +81,14 @@ public class AccountListFragment extends Fragment {
         String endpoint="/api/balance/total";
         String finalurl = url+endpoint;
 
+
         final JsonObjectRequest stringRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, finalurl,null,
                 new com.android.volley.Response.Listener<JSONObject>()  {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
+
                             // Check for error message
                             if(decryptedResponse.getJSONObject("status").getInt("code") != 200) {
                                 Toast.makeText(getActivity().getApplicationContext(), "Error: " + decryptedResponse.getJSONObject("data").getString("message"), Toast.LENGTH_SHORT).show();
@@ -129,7 +116,7 @@ public class AccountListFragment extends Fragment {
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("sss", String.valueOf(error));
+
             }
         }){
             @Override
@@ -159,7 +146,7 @@ public class AccountListFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Log.d("ddss", String.valueOf(response));
+
                             JSONObject decryptedResponse = new JSONObject(EncryptDecrypt.decrypt(response.get("enc_data").toString()));
 
                             // Check for error message
@@ -237,6 +224,18 @@ public class AccountListFragment extends Fragment {
         return bankAccounts;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        define();
+        setDate();
+        click();
+        fetchAccountData();
+
+
+
+    }
 
     private void fetchAccountData() {
         OkHttpClient client = new OkHttpClient();
@@ -244,7 +243,7 @@ public class AccountListFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
         final String retrivedToken = sharedPreferences.getString("accesstoken", null);
 
-        String apiUrl = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Account/view";
+        String apiUrl = "http://59.16.223.162:38888/api/Account/view";
 
         RequestBody requestBody = new FormBody.Builder()
                 .add("username", "username")
@@ -325,7 +324,7 @@ public class AccountListFragment extends Fragment {
                 final String retrivedToken  = sharedPreferences.getString("accesstoken",null);
 
                 // API 엔드포인트 URL 설정
-                String apiUrl = "http://ELB-shield-mobile-477724663.ap-northeast-2.elb.amazonaws.com/api/Account/create";
+                String apiUrl = "http://59.16.223.162:38888/api/Account/create";
 
                 // 요청 바디에 필요한 데이터 설정 (예: 사용자 정보, 계좌 정보 등)
                 // 아래는 예시일 뿐 실제로는 사용자 입력 등을 통해 값을 동적으로 설정해야 합니다.

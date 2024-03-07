@@ -67,13 +67,13 @@ public class HomeFragment extends Fragment {
         tv_user    = homeView.findViewById(R.id.tv_home_username);
 
 
-        recyclerView_notice = homeView.findViewById(R.id.announcelist); // Assuming the RecyclerView ID is 'recycler_view' in your layout
-        recyclerView_notice.setLayoutManager(new LinearLayoutManager(getActivity()));
-        viewNoticeList();
-
-        recyclerView_qna = homeView.findViewById(R.id.qnalist); // Assuming the RecyclerView ID is 'recycler_view' in your layout
-        recyclerView_qna.setLayoutManager(new LinearLayoutManager(getActivity()));
-        viewQnAList();
+//        recyclerView_notice = homeView.findViewById(R.id.announcelist); // Assuming the RecyclerView ID is 'recycler_view' in your layout
+//        recyclerView_notice.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        viewNoticeList();
+//
+//
+//        recyclerView_qna.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        viewQnAList();
 
         ll_notice = homeView.findViewById(R.id.ll_notice);
         ll_qna = homeView.findViewById(R.id.ll_qna);
