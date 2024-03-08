@@ -46,9 +46,11 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -270,6 +272,13 @@ public class LoanFragment extends Fragment {
         return rootView;
     }
 
+    // Enter the correct url for your api service site
+    final int initialTimeoutMs = 2000; // 초기 타임아웃 값 (5초)
+    final int maxNumRetries = 0; // 최대 재시도 횟수
+    final float backoffMultiplier = 1f; // 재시도 간격의 배수
+
+    RetryPolicy policy = new DefaultRetryPolicy(initialTimeoutMs, maxNumRetries, backoffMultiplier);
+
     // 대출 버튼 함수
     public void get_debt(View rootView) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("jwt", Context.MODE_PRIVATE);
@@ -327,6 +336,11 @@ public class LoanFragment extends Fragment {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + retrivedToken);
                 return headers;
+            }
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                // RetryPolicy 설정
+                return policy;
             }
         };
 

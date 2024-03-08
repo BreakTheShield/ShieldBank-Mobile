@@ -64,6 +64,7 @@ public class BankMainActivity extends AppCompatActivity {
         bottomNavigationView.getMenu().findItem(R.id.tab_home).setChecked(true);
         bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
 
+        Log.d("drdf","dfdf" );
 
 //        if(RootUtil.isDeviceRooted()) {
 //            Toast.makeText(getApplicationContext(), "Phone is Rooted", Toast.LENGTH_SHORT).show();

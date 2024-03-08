@@ -21,6 +21,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.NoCache;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -29,6 +32,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static RequestQueue requestQueue;
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
@@ -82,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("FRIDA CHECK", "FRIDA Server NOT RUNNING");
         }
+
+
+        // RequestQueue 초기화 및 정책 설정
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+        int maxNumRetries = 0; // 최대 재시도 횟수
+        requestQueue = new RequestQueue(new NoCache(), new BasicNetwork(new HurlStack()), maxNumRetries);
+        requestQueue.start();
 
 
 

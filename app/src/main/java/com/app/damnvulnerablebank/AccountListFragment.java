@@ -79,6 +79,7 @@ public class AccountListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         // 데이터 가져오기 및 UI 업데이트
         fetchAccountData();
         total();
