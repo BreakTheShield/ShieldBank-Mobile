@@ -88,14 +88,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        // RequestQueue 초기화 및 정책 설정
-        requestQueue = Volley.newRequestQueue(getApplicationContext());
-        int maxNumRetries = 0; // 최대 재시도 횟수
-        requestQueue = new RequestQueue(new NoCache(), new BasicNetwork(new HurlStack()), maxNumRetries);
-        requestQueue.start();
-
-
-
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("jwt", Context.MODE_PRIVATE);

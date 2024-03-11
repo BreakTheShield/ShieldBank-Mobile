@@ -58,7 +58,7 @@ public class Mypage extends AppCompatActivity {
         String finalurl = url+endpoint;
 
         // Enter the correct url for your api service site
-        final int initialTimeoutMs = 20000; // 초기 타임아웃 값 (5초)
+        final int initialTimeoutMs = 30000; // 초기 타임아웃 값 (5초)
         final int maxNumRetries = 0; // 최대 재시도 횟수
         final float backoffMultiplier = 1f; // 재시도 간격의 배수
 
@@ -166,6 +166,11 @@ public class Mypage extends AppCompatActivity {
                 HashMap headers=new HashMap();
                 headers.put("Authorization","Bearer "+retrivedToken);
                 return headers;
+            }
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                // RetryPolicy 설정
+                return policy;
             }
 
 
