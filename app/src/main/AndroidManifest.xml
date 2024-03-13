@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.app.damnvulnerablebank">
+    package="com.app.shieldbank">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
+        tools:replace="android:appComponentFactory"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +24,8 @@
         android:usesCleartextTraffic="true">
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".SplashScreen">
+        <activity android:name=".SplashScreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,21 +37,6 @@
         <activity android:name=".BankMainActivity" />
 
         <activity android:name=".Myprofile" />
-        <activity android:name=".CurrencyRates">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="xe.com"
-                    android:scheme="http" />
-                <data
-                    android:host="xe.com"
-                    android:scheme="https" />
-            </intent-filter>
-        </activity>
         <activity android:name=".Mydata_auth" />
         <activity android:name=".Mydata_send" />
         <activity android:name=".Mydata_sendMoney" />

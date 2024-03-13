@@ -1,16 +1,10 @@
 {
-  "project_info": {
-    "project_number": "932398433474",
-    "firebase_url": "https://damn-vulnerable-bank.firebaseio.com",
-    "project_id": "damn-vulnerable-bank",
-    "storage_bucket": "damn-vulnerable-bank.appspot.com"
-  },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:932398433474:android:64f0cff260d1f223f3675b",
         "android_client_info": {
-          "package_name": "com.app.damnvulnerablebank"
+          "package_name": "com.app.shieldbank"
         }
       },
       "oauth_client": [

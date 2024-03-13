@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.app.damnvulnerablebank",
+  "applicationId": "com.app.shieldbank",
   "variantName": "release",
   "elements": [
     {

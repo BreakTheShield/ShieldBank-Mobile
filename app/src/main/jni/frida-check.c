@@ -14,7 +14,7 @@
 
 #define PORT 27042 // Frida Port
 
-    JNIEXPORT jint JNICALL Java_com_app_damnvulnerablebank_FridaCheckJNI_fridaCheck(JNIEnv * env, jobject jobj) {
+    JNIEXPORT jint JNICALL Java_com_app_shieldbank_FridaCheckJNI_fridaCheck(JNIEnv * env, jobject jobj) {
     	int sock = 0;
     	struct sockaddr_in serv_addr;
 
